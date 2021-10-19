@@ -4,3 +4,6 @@ docs_dir: blog
 theme:
   name: material
   custom_dir: theme
+  palette: 
+    primary: cyan
+    accent: light-blue
