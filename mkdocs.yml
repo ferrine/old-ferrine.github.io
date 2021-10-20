@@ -1,9 +1,0 @@
-site_name: In Search of the Holy Posterior
-site_url: https://ferrine.github.io
-docs_dir: blog
-theme:
-  name: material
-  custom_dir: theme
-  palette: 
-    primary: cyan
-    accent: light-blue
