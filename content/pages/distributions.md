@@ -3,6 +3,14 @@ Title: Distributions
 
 ..graphviz dot
 digraph G {
-  graph [rankdir = LR];
-  Hello -> World
+    node [shape=box];
+    start [label="Likelihood or Prior?"];
+    likelihood [label="Is your data Discrete or Continuous?"];
+    prior [label="Is your parameter Discrete or Continuous?"];
+    discrete_likelihood [label="Type of data"];
+    tails [label="Does your data have outliers?"];
+    start -> likelihood [label="Likelihood"];
+    start -> prior [label="Prior"];
+    likelihood -> tails [label="Continuous"];
+    likelihood -> discrete_likelihood [label="Discrete"];
 }
