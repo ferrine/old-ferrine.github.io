@@ -3,6 +3,10 @@ SITENAME = 'In Search of the Holy Posterior'
 SITEURL = ''
 
 PATH = 'content'
+THEME = 'theme'
+COLOR_SCHEME_CSS = 'github.css'
+HEADER_COVER = "images/header.jpg"
+
 
 TIMEZONE = 'Europe/Moscow'
 
@@ -16,14 +20,11 @@ AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
 
 # Blogroll
-LINKS = (('Pelican', 'https://getpelican.com/'),
-         ('Python.org', 'https://www.python.org/'),
-         ('Jinja2', 'https://palletsprojects.com/p/jinja/'),
-         ('You can modify those links in your config file', '#'),)
+LINKS = ()
 
 # Social widget
-SOCIAL = (('You can add links in your config file', '#'),
-          ('Another social link', '#'),)
+SOCIAL = (('twitter', 'https://twitter.com/ferrine96'),
+          ('github', 'https://github.com/ferrine'),)
 
 DEFAULT_PAGINATION = 10
 
@@ -35,5 +36,6 @@ STATIC_PATHS = [
 EXTRA_PATH_METADATA = {
     'extra/favicon.ico': {'path': 'favicon.ico'},  # and this
 }
+GOOGLE_ANALYTICS = "UA-98661135-1"
 # Uncomment following line if you want document-relative URLs when developing
-#RELATIVE_URLS = True
+# RELATIVE_URLS = True
