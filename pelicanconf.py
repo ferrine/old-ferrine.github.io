@@ -6,6 +6,7 @@ PATH = 'content'
 THEME = 'theme'
 COLOR_SCHEME_CSS = 'github.css'
 HEADER_COVER = "images/header.jpg"
+GRAPHVIZ_COMPRESS = False
 
 
 TIMEZONE = 'Europe/Moscow'
