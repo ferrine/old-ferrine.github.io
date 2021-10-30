@@ -25,7 +25,8 @@ LINKS = ()
 
 # Social widget
 SOCIAL = (('twitter', 'https://twitter.com/ferrine96'),
-          ('github', 'https://github.com/ferrine'),)
+          ('github', 'https://github.com/ferrine'),
+          ('envelope', 'mailto:max.kochurov@pymc-labs.io'))
 
 DEFAULT_PAGINATION = 10
 
