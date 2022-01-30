@@ -5,6 +5,8 @@ channels:
 dependencies:
   - pelican==4.7.1
   - Markdown==3.3.6
+  - jupyterthemes
   - pip:
     - pelican-graphviz==1.2.2
+    - pelican-jupyter==0.10.1
 

@@ -1,9 +1,21 @@
+from pelican_jupyter import markup as nb_markup
+
+MARKUP = ("md", "ipynb")
+
+PLUGINS = [nb_markup]
+IPYNB_SKIP_CSS = True
+IGNORE_FILES = [".ipynb_checkpoints"]
+
+
 AUTHOR = 'Maxim Kochurov'
 SITENAME = 'In Search of the Holy Posterior'
 SITEURL = ''
 
 PATH = 'content'
 THEME = 'theme'
+MENUITEMS = (
+    ("Categories", "categories"),
+)
 COLOR_SCHEME_CSS = 'github.css'
 HEADER_COVER = "images/header.jpg"
 GRAPHVIZ_COMPRESS = False
