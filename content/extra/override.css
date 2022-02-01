@@ -1,4 +1,6 @@
 .prompt.input_prompt {visibility:collapse;}
+.prompt.output_prompt {visibility:collapse;}
+
 .anchor-link {
     opacity:0;
 }
