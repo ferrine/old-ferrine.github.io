@@ -15,13 +15,19 @@ IPYNB_PREPROCESSORS = [
     )
 ]
 
+ARTICLE_URL = 'posts/{date:%Y}/{date:%b}/{date:%d}/{slug}'
+ARTICLE_SAVE_AS = 'posts/{date:%Y}/{date:%b}/{date:%d}/{slug}/index.html'
+PAGE_URL = 'pages/{slug}'
+PAGE_SAVE_AS = 'pages/{slug}/index.html'
+
+
 AUTHOR = "Maxim Kochurov"
 SITENAME = "In Search of the Holy Posterior"
 SITEURL = ""
 
 PATH = "content"
 THEME = "theme"
-MENUITEMS = (("Categories", "categories"),)
+MENUITEMS = (("Categories", "/categories"),)
 COLOR_SCHEME_CSS = "github.css"
 HEADER_COVER = "images/header.jpg"
 GRAPHVIZ_COMPRESS = False
