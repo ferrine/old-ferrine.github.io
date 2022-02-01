@@ -51,7 +51,7 @@ LINKS = ()
 # Social widget
 SOCIAL = (
     ("twitter", "https://twitter.com/ferrine96"),
-    ("github", "https://github.com/ferrine"),
+    ("github", "https://github.com/ferrine/ferrine.github.io"),
     ("envelope", "mailto:max.kochurov@pymc-labs.io"),
 )
 
