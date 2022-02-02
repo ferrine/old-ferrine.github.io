@@ -12,7 +12,7 @@ IGNORE_FILES = [".ipynb_checkpoints"]
 
 class SVGFixPreprocessor(nbconvert.preprocessors.ConvertFiguresPreprocessor):
     from_format = to_format = "image/svg+xml"
-    RE_WIDTH_HEIGHT = re.compile(r'(width|height)="[\d\.]+pt"')
+    RE_WIDTH_HEIGHT = re.compile(r'(width|height)="[^"]+"')
 
     def preprocess_cell(self, cell, resources, cell_index):
         """
@@ -34,7 +34,7 @@ class SVGFixPreprocessor(nbconvert.preprocessors.ConvertFiguresPreprocessor):
         return cell, resources
 
     def convert_figure(self, data_format, data):
-        return self.RE_WIDTH_HEIGHT.sub("", data)
+        return self.RE_WIDTH_HEIGHT.sub("", data, 2)
 
 
 IPYNB_PREPROCESSORS = [
