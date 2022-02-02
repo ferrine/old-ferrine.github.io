@@ -2834,10 +2834,10 @@ z
 <ol>
 <li><a href="https://github.com/arviz-devs/arviz/blob/9d0746972c9bcb1a3063c0ca00ff08a0b0c093ee/arviz/stats/stats.py#L1674">Compute</a> pointwise likelihood for all the observations</li>
 <li><a href="https://github.com/arviz-devs/arviz/blob/9d0746972c9bcb1a3063c0ca00ff08a0b0c093ee/arviz/stats/stats.py#L770">Calcutale</a> LOO likelihood approximation using <a href="https://arxiv.org/abs/1507.02646">pareto smoothed importance sampling</a></li>
-<li><a href="https://github.com/arviz-devs/arviz/blob/9d0746972c9bcb1a3063c0ca00ff08a0b0c093ee/arviz/stats/stats.py#L1729">Approximate</a> inverse CDF values of the posterior predictive (for each sample)</li>
-<li><a href="https://github.com/arviz-devs/arviz/blob/9d0746972c9bcb1a3063c0ca00ff08a0b0c093ee/arviz/plots/loopitplot.py#L177">Approximate</a> the i-CDF function for visualization with KDE</li>
+<li><a href="https://github.com/arviz-devs/arviz/blob/9d0746972c9bcb1a3063c0ca00ff08a0b0c093ee/arviz/stats/stats.py#L1729">Approximate</a> ECDF (Empirical CDF) values of the posterior predictive (for each sample)</li>
+<li><a href="https://github.com/arviz-devs/arviz/blob/9d0746972c9bcb1a3063c0ca00ff08a0b0c093ee/arviz/plots/loopitplot.py#L177">Approximate</a> the ECDF function for visualization with KDE</li>
 </ol>
-<p>If the likelihood is well specified, we'll see a uniform distribution of i-CDF values, means, uniform KDE. Just like on the plot above</p>
+<p>If the likelihood is well specified, we'll see a uniform distribution of ECDF values, means, uniform KDE. Just like on the plot above</p>
 
 </div>
 </div>
@@ -16364,8 +16364,8 @@ z
 </blockquote>
 <p>Oh, you might think! Something is going wrong. What do we read from the plot? Let's operate with facts:</p>
 <ul>
-<li>We have to recall that what we plot here is i-CDF of the posterior predictive.</li>
-<li>We approximate this i-CDF with normal distribution.</li>
+<li>We have to recall that what we plot here is CDF of the posterior applied to the observed data</li>
+<li>Since we specified normal distribution in likelihood our CDF has similar properties (no outliers)</li>
 <li>Looks like our data is mostly concentrated inside the high-density region and not represented on the tails</li>
 </ul>
 <p><em>I know how I generated my data and, actually, expected a bit different picture. But let's see how it goes</em></p>
@@ -35304,8 +35304,8 @@ z
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Ok, we now see two weird bumps in the LOO-PIT plot. What can we say about this?</p>
 <ul>
-<li>Remember, these are i-CDF values</li>
-<li>Yeah, i-CDF says that in high-density region we have less observations than on tails</li>
+<li>Remember, these are CDF values of data</li>
+<li>Yeah, CDF says that in high-density region we have less observations than on tails</li>
 <li>Let me clarify a tiny bit</li>
 </ul>
 
