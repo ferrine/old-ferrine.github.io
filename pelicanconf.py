@@ -98,6 +98,6 @@ EXTRA_PATH_METADATA = {
     "extra/override.css": {"path": "theme/css/override.css"},
 }
 CSS_OVERRIDE = "theme/css/override.css"
-GOOGLE_ANALYTICS = "UA-98661135-1"
+# GOOGLE_ANALYTICS = ""
 # Uncomment following line if you want document-relative URLs when developing
 # RELATIVE_URLS = True
