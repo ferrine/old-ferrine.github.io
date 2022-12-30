@@ -18,7 +18,7 @@ jobs:
     steps:
       - name: Set pelican config for a brunch
         run: |
-          if [[ $GITHUB_REF == 'refs/heads/master' ]]; then
+          if [[ $GITHUB_REF == 'refs/heads/main' ]]; then
               echo "PELICAN_CONFIG=publishconf.py" >> "$GITHUB_ENV"
           else
               echo "PELICAN_CONFIG=pelicanconf.py" >> "$GITHUB_ENV"
