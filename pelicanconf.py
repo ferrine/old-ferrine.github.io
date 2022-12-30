@@ -48,6 +48,7 @@ IPYNB_PREPROCESSORS = [
 
 ARTICLE_URL = "posts/{date:%Y}/{date:%b}/{date:%d}/{slug}"
 ARTICLE_SAVE_AS = "posts/{date:%Y}/{date:%b}/{date:%d}/{slug}/index.html"
+
 PAGE_URL = "pages/{slug}"
 PAGE_SAVE_AS = "pages/{slug}/index.html"
 IPYNB_NB_SAVE_AS = ARTICLE_SAVE_AS.replace("index.html", "notebook.ipynb")
@@ -59,10 +60,12 @@ SITEURL = ""
 
 PATH = "content"
 THEME = "theme"
-MENUITEMS = (("Categories", "/categories"),)
+MENUITEMS = (("Archives", "/archives.html"), ("Categories", "/categories.html"), ("Tags", "/tags.html"))
+USE_FOLDER_AS_CATEGORY = False
 COLOR_SCHEME_CSS = "github.css"
 HEADER_COVER = "images/header.jpg"
 GRAPHVIZ_COMPRESS = False
+
 
 
 TIMEZONE = "Europe/Moscow"
