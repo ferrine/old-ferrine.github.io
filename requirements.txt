@@ -1,0 +1,5 @@
+pelican==4.7.1
+Markdown==3.3.6
+jupyterthemes==0.20.0
+pelican-graphviz==1.2.2
+git+https://github.com/danielfrg/pelican-jupyter.git@49c1d3b

@@ -16,34 +16,68 @@ jobs:
       run:
         shell: bash -l {0}
     steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: true
-    - name: Cache conda
-      uses: actions/cache@v2
-      env:
-        # Increase this value to reset cache if etc/example-environment.yml has not changed
-        CACHE_NUMBER: 0
-      with:
-        path: ~/conda_pkgs_dir
-        key:
-          ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{
-          hashFiles('environment.yaml') }}
-    - uses: conda-incubator/setup-miniconda@v2
-      with:
-        activate-environment: blog
-        channel-priority: strict
-        environment-file: environment.yaml
-        use-only-tar-bz2: true # IMPORTANT: This needs to be set for caching to work properly!
-    - name: Print Environment
-      run: |
-        conda info
-    - name: Build Pages
-      run: |
-        pelican content
-    - name: Deploy Pages
-      uses: peaceiris/actions-gh-pages@v3
-      if: ${{ github.ref == 'refs/heads/main' }}
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./output
+      - name: Set pelican config for a brunch
+        run: |
+          if [[ $GITHUB_REF == 'refs/heads/master' ]]; then
+              echo "PELICAN_CONFIG=publishconf.py" >> "$GITHUB_ENV"
+          else
+              echo "PELICAN_CONFIG=pelicanconf.py" >> "$GITHUB_ENV"
+          fi
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+      - name: Install Dependencies
+        run: |
+          apt install graphviz
+          pip install -r requirements.txt
+      - name: Build Pages
+        run: |
+          pelican content --settings $PELICAN_CONFIG
+      - name: Store Build Content
+        uses: actions/upload-artifact@v3
+        with:
+          name: website-content
+          path: ./output
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ github.ref == 'refs/heads/main' }}
+    # Publish preview of the PR or the release if on master
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: website-content
+      - name: Deploy Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+
+  preview:
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ github.ref != 'refs/heads/main' }}
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: website-content
+      - name: Deploy site preview to Netlify
+        uses: nwtgck/actions-netlify@v1.2
+        with:
+          publish-dir: .
+          production-deploy: false
+          github-token: ${{ secrets.GHPAGES_TOKEN }}
+          deploy-message: "Deploy from GitHub Actions"
+          enable-pull-request-comment: true
+          enable-commit-comment: false
+          overwrites-pull-request-comment: true
+          alias: deploy-preview-${{ github.event.number }}
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        timeout-minutes: 1
