@@ -16,6 +16,13 @@ jobs:
       run:
         shell: bash -l {0}
     steps:
+      - name: Set pelican config for a brunch
+        run: |
+          if [[ $GITHUB_REF == 'refs/heads/master' ]]; then
+              echo "PELICAN_CONFIG=publishconf.py" >> "$GITHUB_ENV"
+          else
+              echo "PELICAN_CONFIG=pelicanconf.py" >> "$GITHUB_ENV"
+          fi
       - uses: actions/checkout@v2
         with:
           submodules: true
@@ -29,7 +36,7 @@ jobs:
           pip install -r requirements.txt
       - name: Build Pages
         run: |
-          pelican content
+          pelican content --settings $PELICAN_CONFIG
       - name: Store Build Content
         uses: actions/upload-artifact@v3
         with:
