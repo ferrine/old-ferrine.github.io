@@ -10,6 +10,21 @@ on:
     branches: [ main ]
 
 jobs:
+  latex:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: xu-cheng/latex-action@v2
+      with:
+        root_file: |
+          latex/beamer/practical-bayes/lecture-1/pres.tex
+        latexmk_shell_escape: true
+
+    - name: Store Build Content
+      uses: actions/upload-artifact@v3
+      with:
+        name: compiled-pdf
+        path: ./latex/**/*.pdf
+
   build:
     runs-on: ubuntu-latest
     defaults:
