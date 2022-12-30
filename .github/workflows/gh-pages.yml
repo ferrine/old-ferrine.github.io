@@ -88,7 +88,7 @@ jobs:
           production-deploy: false
           github-token: ${{ secrets.GHPAGES_TOKEN }}
           deploy-message: "Deploy from GitHub Actions"
-          enable-pull-request-comment: true
+          enable-pull-request-comment: false
           enable-commit-comment: false
           overwrites-pull-request-comment: true
           alias: deploy-preview-${{ github.event.number }}
