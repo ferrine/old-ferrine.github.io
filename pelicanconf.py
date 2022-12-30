@@ -51,7 +51,7 @@ ARTICLE_SAVE_AS = "posts/{date:%Y}/{date:%b}/{date:%d}/{slug}/index.html"
 PAGE_URL = "pages/{slug}"
 PAGE_SAVE_AS = "pages/{slug}/index.html"
 IPYNB_NB_SAVE_AS = ARTICLE_SAVE_AS.replace("index.html", "notebook.ipynb")
-
+IPYNB_EXPORT_TEMPLATE = "theme/templates/nbconvert.html"
 
 AUTHOR = "Maxim Kochurov"
 SITENAME = "In Search of the Holy Posterior"
