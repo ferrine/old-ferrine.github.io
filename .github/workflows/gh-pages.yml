@@ -31,10 +31,10 @@ jobs:
         run: |
           pelican content
       - name: Store Build Content
-          uses: actions/upload-artifact@v3
-          with:
-            name: website-content
-            path: ./output
+        uses: actions/upload-artifact@v3
+        with:
+          name: website-content
+          path: ./output
 
   publish:
     runs-on: ubuntu-latest
