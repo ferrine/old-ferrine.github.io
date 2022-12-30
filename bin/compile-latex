@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 set -e
 compile () {
-    mkdir -p pdf/$(dirname $1)
-    output=$(realpath pdf/$(dirname $1))
     # compile twise because of references
-    (cd $(dirname $1) && pdflatex $(basename $1) -shell-escape -interaction=nonstopmode -output-directory $output)
-    (cd $(dirname $1) && pdflatex $(basename $1) -shell-escape -interaction=nonstopmode -output-directory $output)
-    rm ${output}/*.{aux,log,nav,out,snm,toc}
+    (cd $(dirname $1) && pdflatex $(basename $1) -shell-escape -interaction=nonstopmode)
+    (cd $(dirname $1) && pdflatex $(basename $1) -shell-escape -interaction=nonstopmode)
+    (cd $(dirname $1) && rm *.{aux,log,nav,out,snm,toc})
 }
 
 compile $1
