@@ -37,6 +37,7 @@ jobs:
             path: ./output
 
   publish:
+    runs-on: ubuntu-latest
     needs: build
     if: ${{ github.ref == 'refs/heads/main' }}
     # Publish preview of the PR or the release if on master
@@ -51,6 +52,7 @@ jobs:
           publish_dir: ./output
 
   preview:
+    runs-on: ubuntu-latest
     needs: build
     if: ${{ github.ref != 'refs/heads/main' }}
     steps:
