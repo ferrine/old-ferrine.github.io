@@ -1,5 +1,4 @@
 from pelican_jupyter import markup as nb_markup
-from traitlets import default
 import nbconvert
 import re
 
