@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 set -e
 compile () {
-    # compile twise because of references
-    (cd $(dirname $1) && pdflatex $(basename $1) -shell-escape -interaction=nonstopmode)
-    (cd $(dirname $1) && pdflatex $(basename $1) -shell-escape -interaction=nonstopmode)
-    (cd $(dirname $1) && rm *.{aux,log,nav,out,snm,toc})
+    mkdir -p pdf/$(dirname $1)
+    output=$(realpath $(dirname $1))
+    (cd $(dirname $1) && latexmk -pdf -file-line-error -halt-on-error -interaction=nonstopmode $(basename $1) -shell-escape && latexmk -c)
 }
 
 compile $1
