@@ -16,43 +16,59 @@ jobs:
       run:
         shell: bash -l {0}
     steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: true
-    - uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
-        cache: 'pip'
-    - name: Install Dependencies
-      run: |
-        apt install graphviz
-        pip install -r requirements.txt
-    - name: Build Pages
-      run: |
-        pelican content
-    
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+      - name: Install Dependencies
+        run: |
+          apt install graphviz
+          pip install -r requirements.txt
+      - name: Build Pages
+        run: |
+          pelican content
+      - name: Store Build Content
+          uses: actions/upload-artifact@v3
+          with:
+            name: website-content
+            path: ./output
+
+  publish:
+    needs: build
+    if: ${{ github.ref == 'refs/heads/main' }}
     # Publish preview of the PR or the release if on master
-    - name: Deploy Pages
-      uses: peaceiris/actions-gh-pages@v3
-      if: ${{ github.ref == 'refs/heads/main' }}
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./output
-    
-    # Taken from: https://github.com/drivendataorg/cloudpathlib/blob/master/.github/workflows/docs-preview.yml
-    - name: Deploy site preview to Netlify
-      uses: nwtgck/actions-netlify@v1.1
-      if: ${{ github.ref != 'refs/heads/main' }}
-      with:
-        publish-dir: "./output"
-        production-deploy: false
-        github-token: ${{ secrets.GHPAGES_TOKEN }}
-        deploy-message: "Deploy from GitHub Actions"
-        enable-pull-request-comment: true
-        enable-commit-comment: false
-        overwrites-pull-request-comment: true
-        alias: deploy-preview-${{ github.event.number }}
-      env:
-        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-      timeout-minutes: 1
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: website-content
+      - name: Deploy Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./output
+
+  preview:
+    needs: build
+    if: ${{ github.ref != 'refs/heads/main' }}
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: website-content
+      - name: Deploy site preview to Netlify
+        uses: nwtgck/actions-netlify@v1.1
+        with:
+          publish-dir: "./output"
+          production-deploy: false
+          github-token: ${{ secrets.GHPAGES_TOKEN }}
+          deploy-message: "Deploy from GitHub Actions"
+          enable-pull-request-comment: true
+          enable-commit-comment: false
+          overwrites-pull-request-comment: true
+          alias: deploy-preview-${{ github.event.number }}
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        timeout-minutes: 1
