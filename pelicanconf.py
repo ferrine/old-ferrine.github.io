@@ -63,7 +63,15 @@ SITEURL = ""
 
 PATH = "content"
 THEME = "theme"
-MENUITEMS = (("Archives", "/archives.html"), ("Categories", "/categories.html"), ("Tags", "/tags.html"))
+DISPLAY_CATEGORIES_ON_MENU = False
+DISPLAY_PAGES_ON_MENU = False
+MENUITEMS = (
+    ("Maxim Kochurov", "/pages/maxim-kochurov"),
+    ("Course", "/pages/practical-bayes"),
+    ("Categories", "/categories.html"), 
+    ("Tags", "/tags.html"),
+    ("Archives", "/archives.html"), 
+)
 USE_FOLDER_AS_CATEGORY = False
 COLOR_SCHEME_CSS = "github.css"
 HEADER_COVER = "images/header.jpg"
@@ -87,8 +95,10 @@ LINKS = ()
 
 # Social widget
 SOCIAL = (
+    ("telegram", "https://t.me/ferres"),
     ("twitter", "https://twitter.com/ferrine96"),
-    ("github", "https://github.com/ferrine/ferrine.github.io"),
+    ("linkedin", "https://www.linkedin.com/in/ferrine"),
+    ("github", "https://github.com/ferrine/"),
     ("envelope", "mailto:max.kochurov@pymc-labs.io"),
 )
 
@@ -96,7 +106,7 @@ DEFAULT_PAGINATION = 10
 
 STATIC_PATHS = [
     "images",
-    "extra",  # this
+    "extra",
 ]
 
 EXTRA_PATH_METADATA = {
@@ -104,6 +114,3 @@ EXTRA_PATH_METADATA = {
     "extra/override.css": {"path": "theme/css/override.css"},
 }
 CSS_OVERRIDE = "theme/css/override.css"
-# GOOGLE_ANALYTICS = ""
-# Uncomment following line if you want document-relative URLs when developing
-# RELATIVE_URLS = True

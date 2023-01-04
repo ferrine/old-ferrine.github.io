@@ -1,8 +1,4 @@
-title: Lectures
-date: 2022
-slug: practical-bayes
-category: lectures
-tags: practical-bayes
+title: Practical Bayes
 
 The Practical Bayes course was first held at [Moscow State University, Autumn 2022](https://www.econ.msu.ru/students/mag/curricula/eco/andan/news/News.20220802192752_5070/)
 
