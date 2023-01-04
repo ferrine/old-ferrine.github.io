@@ -67,7 +67,10 @@ jobs:
     steps:
       - uses: actions/download-artifact@v3
         with:
-          path: .
+          name: website-content
+      - uses: actions/download-artifact@v3
+        with:
+          name: compiled-pdf
       - name: Deploy Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
@@ -81,7 +84,10 @@ jobs:
     steps:
       - uses: actions/download-artifact@v3
         with:
-          path: .
+          name: website-content
+      - uses: actions/download-artifact@v3
+        with:
+          name: compiled-pdf
       - name: Deploy site preview to Netlify
         uses: nwtgck/actions-netlify@v2.0
         with:
