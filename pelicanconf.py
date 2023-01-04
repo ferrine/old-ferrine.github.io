@@ -2,9 +2,12 @@ from pelican_jupyter import markup as nb_markup
 import nbconvert
 import re
 
+
 MARKUP = ("md", "ipynb")
 
-PLUGINS = [nb_markup]
+PLUGINS = [nb_markup, "render_math"]
+MATH_JAX = {'tex_extensions': ['color.js','mhchem.js']}
+
 IPYNB_SKIP_CSS = True
 IGNORE_FILES = [".ipynb_checkpoints"]
 

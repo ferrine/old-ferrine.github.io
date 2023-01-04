@@ -1,0 +1,222 @@
+\documentclass{beamer}
+\usepackage{../../ferres}
+\usepackage{../../../math-symbols}
+\usepackage{makecell}
+\logo{
+\includegraphics[width=2cm]{img/msu-logo.png}
+}
+%math
+\author{Max Kochurov}
+\title[Practical Bayes - Customer Lifetime]{Customer Lifetime}
+\institute[MSU]{Moscow State University}
+\begin{document}
+\begin{frame}
+    \maketitle
+\end{frame}
+
+\begin{frame}{Agenda}
+\tableofcontents
+\end{frame}
+\nologo
+\section{Background}
+\nocite{CLVMeraldoAntonio1}
+\nocite{CLVMeraldoAntonio2}
+\subsection{Framework}
+\begin{frame}{What is it?}
+The model rescribes customer relations, they can be the following
+\begin{table}[]
+        \centering
+        \begin{tabular}{c|c|c}
+             &  \alert<2>{\makecell{\textbf{Non-Contractual} \\ Unobserved quit}}&\makecell{\textbf{Contractual}\\Observed quit}\\
+             \hline
+             \alert<2>{\makecell{\textbf{Continuous}\\non-scheduled}}& \alert<2>{\makecell{e-commerce\\ grossery purchase}}&\makecell{credit cards \\ SIM cards}\\
+             \hline
+             \makecell{\textbf{Discrete}\\scheduled}& \makecell{event tickets\\weekly magazine}&\makecell{netflix\\gym membership}\\
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+\begin{frame}{Conceptual framework}
+Rock solid facts about the model:
+\visible<2->{
+\begin{itemize}
+    \item Users quit relations without notice
+    \item Users interact with unspecified and unobserved frequency
+\end{itemize}
+}
+But we need some simplifying assumptions:
+\visible<3->{
+\begin{itemize}
+    \item Once quit, users never return
+    \item Unobserved frequency is constant in time
+\end{itemize}
+}
+\visible<4->{
+\begin{alertblock}{The challenge}
+    Hard to differentiate between customers who have indefinitely churned and those who will return in the future.
+\end{alertblock}
+}
+\visible<5->{
+BG-NBD model can help
+}
+\end{frame}
+\subsection{The BG-NBD model}
+\begin{frame}{The Intuition of the BG-NBD Model}
+    BG-NBD is Beta-Gamma Negative Binomial Distribution
+    \begin{itemize}
+        \item focuses on predicting the number of transactions
+    \end{itemize}
+It is a part of the LTV model
+\begin{equation*}
+    \text{LTV} = \text{\alert<2>{number of transactions}} \times \text{value of transaction}
+\end{equation*}
+\pause
+\begin{itemize}
+    \item value of transaction is usually an easy thing to get
+    \item we mostly care about number of transactions
+\end{itemize}
+\end{frame}
+\begin{frame}{Example}
+\begin{columns}
+    \begin{column}{0.5\linewidth}
+    \begin{itemize}
+        \item You are a bakery owner
+        \item You have purchase records of your customers (with id)
+        \item You want to plan next year revenue
+    \end{itemize}
+    \end{column}
+    \begin{column}{0.5\linewidth}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{img/bakery.png}
+    \end{figure}    
+    \end{column}
+\end{columns}
+\end{frame}
+\begin{frame}{Practical Aspects}
+\begin{columns}
+    \begin{column}{0.5\linewidth}
+    In addition to standard assumptions:
+    \begin{itemize}
+        \item Once quit, users never return
+        \item Unobserved frequency is constant in time
+    \end{itemize}
+    There is couple more:
+    \visible<2->{
+    \begin{itemize}
+        \item<2-> Frequency is user specific
+        \item<3-> Quit probability is also user specific
+    \end{itemize}}        
+    \end{column}
+    \begin{column}{0.5\linewidth}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{img/customers.png}
+    \end{figure}
+    \end{column}
+\end{columns}
+\visible<4>{
+\begin{block}{Interpretation}
+So we treat each user separately which is more realistic. \\
+The retention follows the same idea.
+\end{block}}
+\end{frame}
+\begin{frame}{How priors help}
+    There are number of assumptions we may want to bring in:
+
+    \begin{itemize}
+        \item We’re sure that most of our customers make purchases at a rate of 4 purchases a week
+        \item Our users are "addicted" to the product and have low quit probability, below 30\% in a year
+    \end{itemize}
+\begin{block}{Uncertainty}
+    Our assumptions may be not very certain and we'll reflect them in the priors
+\end{block}
+\end{frame}
+\begin{frame}{The Poisson Process}
+Let's break complicated likelihood in parts.
+\begin{itemize}
+    \item Users follow Poisson Process to make (discrete) purchases
+    \item They make purchases at rate $\lambda=$ 1 and 7 per week.
+    \item With this assumption, we can model the time-to-next-purchase $\Delta_t$ as an exponential distribution $\operatorname{Exponential}(\lambda)$
+\end{itemize}
+\includegraphics[width=\linewidth]{img/prob2purchase.png}
+We are certain the Orange customer will make a purchase next day
+\end{frame}
+\begin{frame}{Time to purchase}
+Every gap can be measured with $\operatorname{Exponential}(\lambda)$
+\includegraphics[width=\linewidth]{img/tx_visual.png}
+\begin{equation*}
+    P(t_1, \dots, t_x\cond \lambda) = \prod_{i=1}^{i=x}\lambda e^{-\lambda (t_i-t_{i-1})}=\lambda^xe^{-\lambda t_x}=P(x, t_x\cond \lambda)
+\end{equation*}
+\begin{block}{Insight}
+    You do not need a sequence $t_1,\dots,t_x$, you only need $t_x$ = "Age of the customer at last purchase \textbf{x}" and \textbf{x} = "Number of purchases"
+\end{block}
+\end{frame}
+\begin{frame}{Deactivation Probability}
+Every step follows a change to deactivate
+\includegraphics[width=\linewidth]{img/deactivation_p.png}
+In the previous formula we add $(x-1)$ cases of non deactivation.
+\begin{equation*}
+    P(x, t_x\cond \lambda, p) = (1-p)^{x-1}\lambda^xe^{-\lambda t_x}
+\end{equation*}
+\end{frame}
+\begin{frame}{Deactivation after $t_x$}
+    \begin{enumerate}
+        \item The customer did not deactivate after $t_x$, this probability is $(1-p)e^{-\lambda(T-t_x)}$
+        \item Customer deactivated with probability $p$ and never returns
+    \end{enumerate}
+\includegraphics[width=\linewidth]{img/customer_waiting_p.png}
+Remainder probability is 
+\begin{equation*}
+    P(T\cond \lambda, t_x, p) = p + (1-p)e^{-\lambda(T-t_x)}
+\end{equation*}
+\end{frame}
+\begin{frame}{Total Probability}
+Step by step we figure out the final formula to use
+\begin{align*}
+    P(x, t_x, T\cond \lambda, p) &= \underbrace{(p + (1-p)e^{-\lambda(T-t_x)})}_{P(T\cond \lambda, p, t_x)} \times \underbrace{(1-p)^{x-1}\lambda^xe^{-\lambda t_x}}_{P(x, t_x\cond \lambda, p)}\\
+    \visible<2->{
+    P(x, t_x, T\cond \lambda, p) &= p (1-p)^{x-1}\lambda^xe^{-\lambda t_x}} \\
+    \visible<2->{
+    &+ (1-p)e^{-\lambda(T-t_x)}(1-p)^{x-1}\lambda^xe^{-\lambda t_x}}\\
+    \visible<3->{
+    P(x, t_x, T\cond \lambda, p) &= p (1-p)^{x-1}\lambda^xe^{-\lambda t_x} + (1-p)^{x}\lambda^xe^{-\lambda T}
+    }
+\end{align*}
+\visible<3->{
+\begin{alertblock}{Important}
+This formula is only applicable to customers made at least one purchase, those have $x>0$ and $t_x$. We need a formula for all customers including $x=0$ and absence of $t_x$
+\end{alertblock}
+}
+\end{frame}
+\begin{frame}{Total Probability for all customers}
+Assumption is that all users after they enroll are active by default.
+
+Given a user without any purchases, we have 
+\begin{equation*}
+    P(T\cond \lambda, x=0) = e^{-\lambda T}
+\end{equation*}
+Combining it with the previous formula we have
+\begin{equation*}
+    P(x, t_x, T\cond \lambda, p) = \begin{cases}
+        p (1-p)^{x-1}\lambda^xe^{-\lambda t_x} + (1-p)^{x}\lambda^xe^{-\lambda T}\quad &x>0\\
+        e^{-\lambda T}\quad &x=0
+    \end{cases}
+\end{equation*}
+Or, equivalently
+\begin{equation*}
+    P(x, t_x, T\cond \lambda, p) = \delta_{x>0} \left[p (1-p)^{x-1}\lambda^xe^{-\lambda t_x}\right] + (1-p)^{x}\lambda^xe^{-\lambda T}
+\end{equation*}
+\end{frame}
+\section{Custom Likelihood}
+\begin{frame}{Transferring to PyMC}
+    There is no such a distribution in PyMC, so you need to implement one. This is what is done with \texttt{\href{https://www.pymc.io/projects/docs/en/stable/api/distributions/generated/pymc.DensityDist.html}{pm.DensityDist}}
+\includegraphics[width=0.8\linewidth]{img/densitydist.png}
+\end{frame}
+\begin{frame}[allowframebreaks]
+\frametitle{References}
+\bibliographystyle{abbrv}
+\bibliography{../../../references.bib}
+\end{frame}
+
+\end{document}

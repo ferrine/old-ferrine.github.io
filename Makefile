@@ -12,8 +12,13 @@ clean: $(CLEAN_TARGETS)
 
 # https://www.gnu.org/software/make/manual/html_node/Automatic-Variables.html
 output/%.pdf: %.tex
-	@echo compiling $(<F)
-	(cd $(<D) && latexmk -pdf -file-line-error -halt-on-error -interaction=nonstopmode -shell-escape $(<F) > /dev/null)
+	@echo Compiling $<
+	(cd $(<D) && \
+		latexmk -pdf -f -file-line-error -halt-on-error -interaction=nonstopmode -shell-escape $(<F) 2>&1 >/dev/null | \
+		grep -Ev '.nav|.toc|.bbl' && exit 1 || exit 0\
+	)
+	@echo "Compilation of $< went with no warnings"
+	@echo Coping the compiled pdf to output
 	mkdir -p output/$(<D)
 	cp $(patsubst %.tex, %.pdf, $<) $@
 
@@ -25,16 +30,15 @@ html:
 html-release:
 	pelican content -s publishconf.py
 
-site: clean html pdf
+site: html pdf
 
-site-release: clean html-release pdf
+site-release: html-release pdf
 
 apt:
 	sudo apt update && sudo apt install graphviz
 
 pypi:
 	pip install -r requirements.txt
-
 
 .PHONY: pdf html site html-release site-release clean apt pypi $(CLEAN_TARGETS)
 

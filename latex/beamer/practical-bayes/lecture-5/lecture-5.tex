@@ -1,0 +1,710 @@
+\documentclass{beamer}
+\usepackage{../../ferres}
+\usepackage{../../../math-symbols}
+\logo{
+}
+%math
+\author{Max Kochurov}
+\title[Practical Bayes - Gaussian Processes Part 2]{Gaussian Processes Part 2}
+\institute{MSU}
+\begin{document}
+\begin{frame}
+	\maketitle
+\end{frame}
+\begin{frame}{Agenda}
+\tableofcontents
+\end{frame}
+\section{Introduction}
+\begin{frame}{Time Series, Classical Approach}
+\begin{columns}
+    \begin{column}{0.5\linewidth}
+    If data has seasonality, you usually use \href{https://www.statsmodels.org/devel/examples/notebooks/generated/stl_decomposition.html}{STL} decomposition. However,
+    \begin{itemize}
+        \item Parameters are not interpretable, only decomposition is available
+        \item No uncertainty estimates
+        \item Quite strict on input values
+        \item Significantly less flexible in modelling
+    \end{itemize}
+    \end{column}
+    \begin{column}{0.5\linewidth}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{img/examples_notebooks_generated_stl_decomposition_6_0}
+        \caption{STL decomposition for CO2 data, Statsmodels}
+    \end{figure}
+    \end{column}
+\end{columns}
+\end{frame}
+\section{GP approach}
+\subsection{Introduction}
+\begin{frame}{GP decomposition}
+A Gaussian process can handle a complicated set of assumptions in addition to what STL provides
+\begin{itemize}
+    \item Granular seasonality (year + quarter + month + week)
+    \item Changepoint models
+    \item Flexible likelihood Function
+    \item Panel regression models
+    \item Missing values
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Typical Model}
+Typical model is additive
+    \begin{equation*}
+        x_t \sim \underbrace{g(t)}_{non-periodic} + \underbrace{s(t)}_{periodic} + \underbrace{h(t)}_{holidays}
+    \end{equation*}
+\begin{block}{Reference}
+    See more in \href{https://doi.org/10.7287/peerj.preprints.3190v2}{Prophet} preprint \cite{prophet_github}. Every time series model is unique
+\end{block}
+\end{frame}
+\begin{frame}{Reminder}
+$x \in \R^n$, $y\in\R$
+    \begin{align*}
+    Y &\sim \mathcal{GP}(\alert<3>{m(x)}, \alert<4>{k(x, x')})\\
+    \visible<2->{\begin{bmatrix} y_1 \\ \vdots \\ y_N \\ \end{bmatrix} &\sim
+\mathcal{N}\left(
+  \alert<3>{\begin{bmatrix} m(x_1)  \\\vdots\\ m(x_N)    \\ \end{bmatrix}} \,,
+  \alert<4>{\begin{bmatrix} k(x_1,x_1)    & \dots & k(x_1, x_N)    \\
+                  \vdots & \ddots& \vdots \\
+                  k(x_N, x_1) & \dots & k(x_N, x_N)  \\ \end{bmatrix}}
+        \right) \,}
+    \end{align*}
+    \begin{enumerate}
+        \item<2-> $\mathcal{GP}$ Gaussian Process - simply, a normal distribution with special mean $m(x)$ and covariance $k(x, x')$
+        \item<3-|alert@3> $m(x)$ - mean function, e.g.
+        \begin{itemize}
+            \item Linear regression $m(x) = x^\top \beta$
+            \item Simply Constant or Zero $m(x) = c$
+            \item Other custom functions $m(x) = \sin(x)$
+        \end{itemize}
+        \item<4-|alert@4> $k(x, x')$ - kernel function, simply - measure of similarity for $x$ and $x'$
+        \begin{itemize}
+            \item $[K]_{ij}=k(x_i, x_j)$ is an SPD matrix
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+\subsection{Non-periodic part}
+\begin{frame}{Non-periodic Part (mean function)}
+\begin{columns}
+    \begin{column}{0.5\linewidth}
+\begin{itemize}
+    \item<alert@2> Growth models
+    \item<alert@3> Linear trend models
+    \item<alert@4> Changepoint models
+\end{itemize}
+\visible<5>{
+\begin{block}{Extentions}
+    Extensions are possible, e.g. time dependent saturation in the growth model. See in \cite{prophet_github}
+\end{block}
+}
+    \end{column}
+    \begin{column}{0.5\linewidth}
+    \only<2>{
+        \begin{figure}
+            \centering
+            \includegraphics[width=\linewidth]{img/growth_model}
+            \caption{Growth Model}
+        \end{figure}
+        \begin{equation*}
+            x = \frac{c}{1 + \exp(-k(t-m))}
+        \end{equation*}
+    }
+    \only<3>{
+        \begin{figure}
+            \centering
+            \includegraphics[width=\linewidth]{img/linear_trend}
+            \caption{Linear Trend Model}
+        \end{figure}
+        \begin{equation*}
+            x = \frac{c}{1 + \exp(-k(t-m))}
+        \end{equation*}
+    }
+    \only<4->{
+        \begin{figure}
+            \centering
+            \includegraphics[width=\linewidth]{img/changepoint_model}
+            \caption{Changepoint Model}
+        \end{figure}
+        \begin{equation*}
+            x = \begin{cases}
+                c_1, \quad&t<m\\
+                c_2, \quad&t\ge m
+            \end{cases}
+        \end{equation*}
+    }
+    \end{column}
+\end{columns}
+\end{frame}
+\begin{frame}{Holidays}
+ \begin{equation*}
+        h(t) = \operatorname{is-holiday}(t)
+    \end{equation*}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{img/holidays}
+        \caption{Holiday features}
+    \end{figure}
+\end{frame}
+\subsection{Periodic part}
+\begin{frame}{Periodic part (cov function)}
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+        Granularities are important here. Multiple Periodic kernels can be used.
+            \begin{itemize}
+                \item Yearly
+                \item Quarterly
+                \item Monthly
+                \item Weekly
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\linewidth}
+        \begin{figure}
+            \centering
+            \includegraphics[width=\linewidth]{img/decomposed_time_series}
+        \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+\begin{frame}{Lengthscales for Periodic Part}
+    \begin{block}{Hyperparameters}
+        Common sense driven lenthscale choice
+    \end{block}
+    \begin{itemize}
+        \item Week - couple of days make a change ($ls\approx3$)
+        \item Month - week makes sense for a dramatic change ($ls\approx7$)
+        \item Quarter - month makes sense for a dramatic change ($ls\approx30$)
+        \item Year - quarter makes sense for a dramatic change ($ls\approx90$)
+    \end{itemize}
+    \pause
+    \begin{alertblock}{In practice}
+        Hard to infer lengthscales, better just fix them if informed
+    \end{alertblock}
+\end{frame}
+\subsection{The Model}
+\begin{frame}{Putting All Together}
+\begin{align*}
+    m(t) &= \underbrace{g(t)}_{non-periodic} + \underbrace{h(t)}_{holidays}\\
+    k(*, *) &= \visible<2->{\alert<2>{\alpha_{365}}}\operatorname{Periodic}(\rp=365, \rl=90)\\
+      &+ \visible<2->{\alert<2>{\alpha_{90}}}\operatorname{Periodic}(\rp=90, \rl=30)\\
+      &+ \visible<2->{\alert<2>{\alpha_{30}}}\operatorname{Periodic}(\rp=30, \rl=7)\\
+      &+ \visible<2->{\alert<2>{\alpha_{7}}}\operatorname{Periodic}(\rp=7, \rl=3)\\
+      &\visible<3->{\alert<3>{+ \beta \operatorname{ExpQuad}(\rl=90) +\operatorname{WhiteNoise}(\gamma)}}
+\end{align*}
+\visible<2->{
+\begin{block}{Missing Parts}
+\begin{enumerate}
+    \item<2-> Weights for periodic components
+    \item<3-> Trent violations from $g(t)$ that can't be explained by periodic component and observation noise
+\end{enumerate}
+\end{block}
+}
+\end{frame}
+\section{Modelling}
+\subsection{Priors}
+\begin{frame}{Example}
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+        CO2 data (Manua Loa, Hawaii)
+        \begin{itemize}
+            \item Monthly observations
+            \item Clean data
+            \item Unclear trend function
+        \end{itemize}
+        \visible<2->{
+        \begin{block}{Where to start?}
+        \begin{enumerate}
+            \item Decide on a trend model
+            \item Add periodic component
+        \end{enumerate}
+        \end{block}
+        }
+        \end{column}
+        \begin{column}{0.5\linewidth}
+        \begin{figure}
+            \centering
+            \includegraphics[width=\linewidth]{img/co2_data}
+            \caption{CO2 level}
+        \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+\begin{frame}{Priors}
+The exponential Growth Model
+\begin{equation*}
+    y_t = y_0 \cdot g^t
+\end{equation*}
+\begin{enumerate}
+    \item The baseline level for CO2 (data tells it is  $\approx310$)
+    \item Growth rate for CO2 (some plausible value)
+    \begin{itemize}
+        \item unlikely decay
+        \item no astronomic values
+    \end{itemize}
+\end{enumerate}
+\end{frame}
+\begin{frame}{Prior Predictive Checks (Naive Attempt)}
+\begin{columns}
+    \begin{column}{0.5\linewidth}
+    \begin{align*}
+        \alert<2>{g} &\alert<2>{\sim \operatorname{Normal}(1.1, 0.1)}\\
+        \eps &\sim \operatorname{LogNormal}(0, 1)\\
+        y_0 &\sim \operatorname{Normal}(310, 10)\\
+        y_t &\sim \operatorname{Normal}(y_0 \cdot g^t, \eps)
+    \end{align*}
+    \visible<2>{
+    \begin{alertblock}{PPC Observation}
+        Model is unlikely to be correctly specified. Prior predictive ranges to $10^{127}$ \textbf{parts per million} of CO2. Air has $2.5\cdot10^{25}$ molecules in m$^3$
+    \end{alertblock}
+    }
+    \end{column}
+    \begin{column}{0.5\linewidth}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{img/ppc_1.png}
+        \caption{Prior Predictive Check}
+    \end{figure}
+    \end{column}
+\end{columns}
+\end{frame}
+\begin{frame}{Prior Predictive (Problem Driven)}
+    \begin{block}{Thinking loudly}
+    I do not believe in a century we can exceed 400\% growth (we would have died already) and I suppose it should be at least 20\% (it would not be a problem otherwise)
+    \end{block}
+    \visible<2->{
+    \begin{enumerate}
+        \item 400\% in a century is 0.115\% per month
+        \item 20\% in a century is 0.015\% per month
+    \end{enumerate}}
+    \visible<3->{
+    \begin{equation*}
+        g\sim \operatorname{Normal}(1.00065, 0.0005)
+    \end{equation*}
+    }
+\end{frame}
+\begin{frame}{Prior Predictive (Problem Driven)}
+    \begin{columns}
+    \begin{column}{0.5\linewidth}
+    \begin{align*}
+        g &\sim \operatorname{Normal}(1.00065, 0.0005)\\
+        \eps &\sim \operatorname{LogNormal}(0, 1)\\
+        y_0 &\sim \operatorname{Normal}(310, 10)\\
+        y_t &\sim \operatorname{Normal}(y_0 \cdot g^t, \eps)
+    \end{align*}
+    \visible<2>{
+    \begin{block}{PPC Observation}
+        Model acts as expected ranging CO2 levels in plausible regions. It seems to be good enough to go to the next step.
+    \end{block}
+    }
+    \end{column}
+    \begin{column}{0.5\linewidth}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{img/ppc_2.png}
+        \caption{Prior Predictive Check}
+    \end{figure}
+    \end{column}
+\end{columns}
+\end{frame}
+\begin{frame}{Inference}
+    \begin{columns}
+    \begin{column}{0.5\linewidth}
+    \begin{enumerate}
+        \item In sampling any value could appear
+        \item Here we got a very large value for some parameter
+        \item We can try to reparametrize
+    \end{enumerate}
+    \end{column}
+    \begin{column}{0.5\linewidth}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{img/warnings_inference}
+        \caption{Overflow in sampling}
+    \end{figure}
+    \end{column}
+    \end{columns}
+\end{frame}
+\subsection{Parametrization}
+\begin{frame}{Log Model}
+    \begin{equation*}
+    \log y_t = \log y_0 + g \cdot t
+    \end{equation*}
+    \begin{align*}
+        g &\sim \operatorname{Normal}(1.00065, 0.0005)\\
+        \eps &\sim \operatorname{LogNormal}(-2, 0.5)\\
+        \log y_0 &\sim \operatorname{Normal}(\log 310, 10/310)\\
+        y_t & \sim \operatorname{LogNormal}(\log y_0 + g \cdot t, \eps)
+    \end{align*}
+\begin{alertblock}{Important}
+    $\eps$ has a different meaning in the model. It is now a relative error.
+\end{alertblock}
+\end{frame}
+\begin{frame}{Prior Predictive (Reparametrized)}
+    \begin{columns}
+    \begin{column}{0.5\linewidth}
+    \begin{align*}
+        g &\sim \operatorname{Normal}(1.00065, 0.0005)\\
+        \eps &\sim \operatorname{LogNormal}(-2, 0.5)\\
+        \log y_0 &\sim \operatorname{Normal}(\log 310, 10/310)\\
+        y_t & \sim \operatorname{LogNormal}(\log y_0 + g \cdot t, \eps)
+    \end{align*}
+    \visible<2>{
+    \begin{block}{PPC Observation}
+        Model acts as expected ranging CO2 levels in plausible regions. It seems to be good enough to go to proceed with sampling.
+    \end{block}
+    }
+    \end{column}
+    \begin{column}{0.5\linewidth}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{img/ppc_3.png}
+        \caption{Prior Predictive Check}
+    \end{figure}
+    \end{column}
+\end{columns}
+\end{frame}
+\begin{frame}{Inference}
+\begin{columns}
+    \begin{column}{0.5\linewidth}
+    \begin{enumerate}
+        \item Everything is good
+        \item We can visualize
+        \item<2> Trace plot is a good visual inspection if sampling went well
+    \end{enumerate}
+    \visible<2>{
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{img/trace_plot}
+        \caption{Good Trace Plot}
+    \end{figure}
+    }
+    \end{column}
+    \begin{column}{0.5\linewidth}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{img/good_inference}
+        \caption{Good sampling}
+    \end{figure}
+    \end{column}
+    \end{columns}
+\end{frame}
+\begin{frame}{Posterior Predictive}
+\begin{columns}
+    \begin{column}{0.5\linewidth}
+    Another way to validate your model is posterior predictive.
+    \begin{itemize}
+        \item How model performs vs observed data?
+        \item Is there any missing effect to include?
+    \end{itemize}
+    Let's see
+    \visible<2>{
+    \begin{enumerate}
+        \item The fit is good
+        \item Model does not reflect seasonalities
+        \item We can fix it with a better model
+    \end{enumerate}
+    }
+    \end{column}
+    \begin{column}{0.5\linewidth}
+    \visible<2>{
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{img/ppc_4.png}
+        \caption{Posterior Predictive Plot}
+    \end{figure}
+    }
+    \end{column}
+\end{columns}
+\end{frame}
+\begin{frame}{Conclusions so far}
+\begin{columns}
+    \begin{column}{0.5\linewidth}
+    \begin{itemize}
+        \item The reparametrized model is decent
+        \item It does not account for seasonality
+        \item We have the mean function for the next modelling step
+    \end{itemize}
+    \end{column}
+    \begin{column}{0.5\linewidth}
+    \begin{align*}
+        g &\sim \operatorname{Normal}(1.00065, 0.0005)\\
+        \eps &\sim \operatorname{LogNormal}(-2, 0.5)\\
+        \log y_0 &\sim \operatorname{Normal}(\log 310, 10/310)\\
+        y_t & \sim \operatorname{LogNormal}(\log y_0 + g \cdot t, \eps)
+    \end{align*}
+    \end{column}
+\end{columns}
+\end{frame}
+\subsection{Seasonality}
+\begin{frame}{Adding Seasonality}
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+        CO2 data (Manua Loa, Hawaii)
+        \begin{itemize}
+            \item Monthly observations
+            \item Yearly seasonality makes sense
+            \item Trend function is clear from a simpler model
+            \item<2-> Seasonality can be added with a periodic kernel
+            \item<3-> Period is 12 months
+            \item<4-> Appropriate lengthscale is $\approx 3$ months
+            \item<5-> Do not forget to scale the covariance!
+        \end{itemize}
+        
+        \end{column}
+        \begin{column}{0.5\linewidth}
+        \begin{figure}
+            \centering
+            \includegraphics[width=\linewidth]{img/co2_data}
+            \caption{CO2 level}
+        \end{figure}
+        \end{column}
+    \end{columns}
+    \visible<2->{
+        \begin{equation*}
+            k(*, *) =\visible<5->{\alert<5>{\alpha_k}} \operatorname{Periodic}(\rp=\visible<3->{\alert<3>{12}}, \rl=\visible<4->{\alert<4>{3}})
+        \end{equation*}
+        }
+\end{frame}
+\begin{frame}{Seasonality Change}
+    \begin{equation*}
+        K(*, *) = \alpha_k \operatorname{Periodic}(\rp=12, \rl=3)\visible<4->{\alert<4>{\cdot \operatorname{Exponential}(\alert<5>{\rl=1200})}}
+    \end{equation*}
+    \begin{itemize}
+        \item Periodic kernel is a strong prior.
+        \item Seasonality pattern is assumed constant (what if ...)
+        \item<2-> We can make seasonality patterns change (kernel math!)
+        \item<3-> We need a decay in correlation between distant year patterns
+        \item<4-> Multiplication with the Exponential kernel should work just fine
+        \item<5-> Lengthscale in the Exponential kernel is how strong patterns correlate across months
+        \item<5-> I choose 1200, century long patterns 
+    \end{itemize}
+\end{frame}
+\begin{frame}{Decay Visualized}
+    \begin{columns}
+    \begin{column}{0.5\linewidth}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{img/no_decay_ppc}
+        \caption{Mean without decay}
+    \end{figure}
+    \end{column}
+    \begin{column}{0.5\linewidth}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{img/decay_ppc}
+        \caption{Mean with decay}
+    \end{figure}
+    \end{column}
+    \end{columns}
+    \begin{block}{Decay model}
+    No decay model is the limit case of decay model with lengthscale $\to \infty$
+    \end{block}
+\end{frame}
+\begin{frame}{The Model}
+    \begin{align*}
+        g &\sim \operatorname{Normal}(1.00065, 0.0005)\\
+        \eps &\sim \operatorname{LogNormal}(-2, 0.5)\\
+        \log y_0 &\sim \operatorname{Normal}(\log 310, 10/310)\\
+        \alpha_k & \sim \operatorname{LogNormal}(-2, 0.5)\\
+        K(*, *) &= \alpha_k \operatorname{Periodic}(\rp=12, \rl=3)\cdot\operatorname{Exponential}(\rl=1200)\\
+        \log \bar y_t &= \mathcal{GP}(\log y_0 + g \cdot t, K)\\
+        y_t & \sim \operatorname{LogNormal}(\log \bar y_t, \eps)
+    \end{align*}
+    \begin{block}{Improve the model}
+    \begin{enumerate}
+        \item Figure out a better $\eps$ prior
+        \item Infer better lengthscales (hyperpriors)
+        \item Infer structural medium term shift (additive kernel)
+    \end{enumerate}
+    \end{block}
+\end{frame}
+\begin{frame}{Prior Predictive Check}
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+        \begin{figure}
+            \centering
+            \includegraphics[width=\linewidth]{img/prior_predictive_noisy}
+            \caption{$\eps \sim \operatorname{LogNormal}(-2, 0.5)$}
+        \end{figure}
+        \end{column}
+        \begin{column}{0.5\linewidth}
+        \begin{figure}
+            \centering
+            \includegraphics[width=\linewidth]{img/prior_predictive_smooth}
+            \caption{$\eps \sim \operatorname{LogNormal}(-4, 0.5)$}
+        \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+\begin{frame}{Inference}
+\begin{columns}
+\begin{column}{0.5\linewidth}
+\begin{itemize}
+    \item \texttt{pm.sample()} is slow
+    \item GPU sampling is also slow
+    \item \texttt{pm.find\_MAP()} makes sense and fast
+\end{itemize}
+\end{column}
+\begin{column}{0.5\linewidth}
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{img/predictions}
+    \caption{Predictions with MAP}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+\begin{frame}{Key takeaways}
+    \begin{itemize}
+        \item Look at prior predictive to validate initial model
+        \item Interpretable building blocks create interpretable model
+        \item Sasonality model is done with Periodic kernel
+        \item Seasonality might be flexible
+    \end{itemize}
+\end{frame}
+\section{Stochastic Volatility}
+\begin{frame}{Stochastic Volatility Model}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{img/stoch_vol}
+        \caption{Stochastic Volatility Estimation for AAPL}
+    \end{figure}
+    \begin{block}{Read More}
+    \url{https://github.com/quantopian/bayesalpha}
+    \end{block}
+\end{frame}
+\begin{frame}{Key Ideas}
+    \begin{itemize}
+        \item Returns are constant
+        \item Volatility is not constant
+        \item Model volatility as a Gaussian process
+        \item Use approximations to speed up the model
+        \item Use GPU to do fast inference
+    \end{itemize}
+\end{frame}
+\begin{frame}{Priors}
+    \begin{itemize}
+        \item Returns
+        \begin{itemize}
+            \item<2-> Expect year return at orders $\pm100\%$
+            \item<3-> Daily return $\pm(2^{\tfrac{1}{250}}-1)$
+            \item<4-> The prior is insane but yet motivated, name your prior!
+        \end{itemize}
+        \item Volatility
+        \begin{itemize}
+            \item<5-> Expect signal to noise $\frac{\text{mean}}{\text{std}}\approx 1$
+            \item<6-> $\log \text{std} = \log(2^{\tfrac{1}{250}}-1)$ 
+        \end{itemize}
+        \item Time Component
+        \begin{itemize}
+            \item<7-> After the model is framed
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+\begin{frame}{The Model}
+I did the modelling choice to make it as simple as possible
+    \begin{align*}
+        \alert<2>{\text{return} }& \alert<2>{\sim \operatorname{Normal}(0, 2^{\tfrac{1}{250}}-1)}\\
+        \alert<3>{\log\text{std}}& \alert<3>{\sim \operatorname{Normal}(\log(2^{\tfrac{1}{250}}-1), 0.05)}\\
+        \alert<4>{\text{ls}} & \alert<4>{\sim \operatorname{Gamma}(30, 5) }\\
+        \alert<5>{\alpha_{\text{vol}} }& \alert<5>{\sim \operatorname{Exponential}(100)}\\
+        \alert<6>{K(*, *) }& \alert<6>{= \alpha_{\text{vol}} \operatorname{Matern32}(\text{ls})}\\
+        \alert<7>{\Delta_t^{\log \text{std}} }&\alert<7>{\sim \mathcal{GP}(0, K)}\\
+        \alert<8>{\text{obs}_t }&\alert<8>{\sim \operatorname{Normal}(\text{return}, \exp(\log \text{std} + \Delta_t^{\log \text{std}}))}
+    \end{align*}
+\end{frame}
+\begin{frame}{Splines}
+    \centering \Huge Make the model faster!
+\end{frame}
+\begin{frame}{Spline interpolation}
+    \href{https://www.pymc.io/projects/experimental/en/latest/api_reference.html\#pymc_experimental.utils.spline.bspline_interpolation}{\texttt{pmx.utils.spline.bspline\_interpolation}}
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{img/bspline_vis}
+    \caption{B-Spline interpolation}
+\end{figure}
+\begin{equation*}
+    y' = B(x, x', d) y,
+\end{equation*}
+where $\{x, y\}$ original function, $d$ - degree, \\
+$x'$ - new domain, $y'$ interpolated function
+\end{frame}
+\begin{frame}{Spline interpolation}
+    \href{https://www.pymc.io/projects/experimental/en/latest/api_reference.html\#pymc_experimental.utils.spline.bspline_interpolation}{\texttt{pmx.utils.spline.bspline\_interpolation}}
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{img/bspline_vis1}
+    \caption{B-Spline interpolation (fewer points)}
+\end{figure}
+\begin{equation*}
+    y' = B(x, x', d) y,
+\end{equation*}
+where $\{x, y\}$ original function, $d$ - degree, \\
+$x'$ - new domain, $y'$ interpolated function
+\end{frame}
+\begin{frame}{Why B-Spline}
+\begin{equation*}
+    y' = B(x, x', d) y,
+\end{equation*}
+    \begin{enumerate}
+        \item $x$, $x'$ are usually given
+        \item $y$ - is random (Gaussian Process)
+        \item $y'$ - is a smooth interpolation
+        \item $B(x, x', d)$ is static
+        \item $B(x, x', d)$ is sparse
+    \end{enumerate}
+\begin{alertblock}{To remember}
+    \begin{enumerate}
+        \item Bad extrapolation when degree $d > 2$
+    \end{enumerate}
+\end{alertblock}
+\end{frame}
+\begin{frame}{Spline Interpolation}
+\begin{itemize}
+    \item $d=1$  - linear interpolation
+    \item $d=2$  - quadratic interpolation
+    \item $d=3$  - cubic interpolation
+\end{itemize}
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{img/spline_degrees}
+    \caption{Spline interpolation}
+\end{figure}
+\end{frame}
+\begin{frame}{Splines for Stochastic volatility}
+    \begin{align*}
+        \text{return} & \sim \operatorname{Normal}(0, 2^{\tfrac{1}{250}}-1)\\
+        \log\text{std}& \sim \operatorname{Normal}(2^{\tfrac{1}{250}}-1, 0.05)\\
+        \text{ls} & \sim \operatorname{Gamma}(30, 5) \\
+        \alpha_{\text{vol}} & \sim \operatorname{Exponential}(100)\\
+        K(*, *) & = \alpha_{\text{vol}} \operatorname{Matern32}(\text{ls})\\
+        \bar\Delta_{t'}^{\log \text{std}} &\sim \mathcal{GP}(0, K)\\
+        \alert<2>{\Delta_{t}^{\log \text{std}}} & \alert<2>{= \operatorname{B-Spline}(\bar\Delta_{t'}^{\log \text{std}}, \text{d}=3)}\\
+        \text{obs}_t &\sim \operatorname{Normal}(\text{return}, \exp(\log \text{std} + \Delta_t^{\log \text{std}}))
+    \end{align*}
+\end{frame}
+\begin{frame}{Results}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.9\linewidth]{img/stoch_vol_posterior}
+        \caption{Trace plot for core parameters}
+    \end{figure}
+\end{frame}
+\begin{frame}{Takeaways}
+    \includegraphics[width=\linewidth]{img/stoch_vol}
+    \begin{itemize}
+        \item Interpretable parameters
+        \item Splines make model much faster
+        \item Uncertainties for
+        \begin{itemize}
+            \item average volatility
+            \item average returns 
+            \item stochastic variation ($\alpha_{\text{vol}}$)
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+\begin{frame}[allowframebreaks]
+\frametitle{References}
+\bibliographystyle{abbrv}
+\bibliography{../../../references.bib}
+\end{frame}
+\end{document}

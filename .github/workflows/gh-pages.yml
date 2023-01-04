@@ -18,7 +18,7 @@ jobs:
         lfs: true
     - uses: xu-cheng/texlive-action/full@v1
       with:
-        run: make pdf
+        run: make -j4 pdf
 
     - name: Store Build Content
       uses: actions/upload-artifact@v3
