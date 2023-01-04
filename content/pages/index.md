@@ -24,6 +24,7 @@ Title: Maxim Kochurov
 <image src=/images/profile_photo.png style="width: 250px">
 </div>
 <div class="column">
+<h2>About me</h2>
 <p> I am a principal data scientist at <a href=https://pymc-labs.io>PyMC Labs</a> where we build open source software and provide consulting services to large companies and small startups. We do top notch Bayesian modelling for challenging causal problems that are not solved with classical fit-predict paradigm.
 </div>
 </div>
