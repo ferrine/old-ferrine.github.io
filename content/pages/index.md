@@ -14,10 +14,14 @@ Title: Maxim Kochurov
   float: left;
   padding: 10px;
 }
+.logos img {
+  padding: 10px;
+  height: 50px;
+}
 </style>
 <div class="row">
 <div class="image">
-<image src=/images/profile_photo.png width=250px>
+<image src=/images/profile_photo.png style="width: 250px">
 </div>
 <div class="column">
 <p> I am a principal data scientist at <a href=https://pymc-labs.io>PyMC Labs</a> where we build open source software and provide consulting services to large companies and small startups. We do top notch Bayesian modelling for challenging causal problems that are not solved with classical fit-predict paradigm.
@@ -47,6 +51,14 @@ I'm an [invited lecturer](https://www.econ.msu.ru/students/mag/curricula/eco/and
 * Bayesian deep learning research at [Bayes Group](https://bayesgroup.ru/) 2017-2020
 * Large scale computer vision and distributed deep learning for collaborative environments
 * Strong Python, Linux and CI/CD experience
+
+<div class="logos">
+<image src=/images/pymc-labs-logo.png>
+<image src=/images/msu-logo.png>
+<image src=/images/sk-logo.png>
+<image src=/images/bayesgroup-logo.png>
+<image src=/images/ntechlab-logo.png>
+</div>
 
 ## Contacts
 Interested in working with me? You can write directly to my work [email](mailto:max.kochurov@pymc-labs.io) ot just text me in [Telegram](https://t.me/ferres).
