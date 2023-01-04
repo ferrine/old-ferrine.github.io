@@ -18,14 +18,13 @@ jobs:
         lfs: true
     - uses: xu-cheng/texlive-action/full@v1
       with:
-        run: |
-          find latex -name '*.tex' -exec ./bin/compile-latex {} \;
+        run: make pdf
 
     - name: Store Build Content
       uses: actions/upload-artifact@v3
       with:
         name: compiled-pdf
-        path: ./latex/**/*.pdf
+        path: ./output/latex/**/*.pdf
 
   build:
     runs-on: ubuntu-latest
@@ -36,9 +35,9 @@ jobs:
       - name: Set pelican config for a brunch
         run: |
           if [[ $GITHUB_REF == 'refs/heads/main' ]]; then
-              echo "PELICAN_CONFIG=publishconf.py" >> "$GITHUB_ENV"
+              echo "TARGET=html-release" >> "$GITHUB_ENV"
           else
-              echo "PELICAN_CONFIG=pelicanconf.py" >> "$GITHUB_ENV"
+              echo "TARGET=html" >> "$GITHUB_ENV"
           fi
       - uses: actions/checkout@v2
         with:
@@ -50,11 +49,10 @@ jobs:
           cache: 'pip'
       - name: Install Dependencies
         run: |
-          sudo apt update && sudo apt install graphviz
-          pip install -r requirements.txt
+          make apt pypi
       - name: Build Pages
         run: |
-          pelican content --settings $PELICAN_CONFIG
+          make $TARGET
       - name: Store Build Content
         uses: actions/upload-artifact@v3
         with:
