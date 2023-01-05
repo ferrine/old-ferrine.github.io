@@ -86,7 +86,7 @@ In most cases it is satisfactory to start simple and relax assumptions.
 
 Hierarchical modelling.
 
-### Classical Econometrics view:
+### Classical Econometrics view
 
 * All the groups are independent and treated similarly. **Pooled Model**
 
