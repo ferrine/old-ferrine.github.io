@@ -269,6 +269,7 @@ The frequentist counterpart would treat every customer separately, loosing essen
 Hierarchical approach provides additional insights about the distribution of population level activity levels and retention.
 
 > Most of the material is taken from [Antonio Meraldo's blog](https://medium.com/@meraldo.antonio)
+> 
 > * [Part 1](https://towardsdatascience.com/customer-lifetime-value-estimation-via-probabilistic-modeling-d5111cb52dd)
 > * [Part 2](https://towardsdatascience.com/bayesian-customer-lifetime-values-modeling-using-pymc3-d770676f5c06)
 
