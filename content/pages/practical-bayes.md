@@ -268,4 +268,8 @@ Bayesian approach helps to link business knowledge about retention and purchase 
 The frequentist counterpart would treat every customer separately, loosing essential bits ignoring similarities between them.
 Hierarchical approach provides additional insights about the distribution of population level activity levels and retention.
 
+> Most of the material is taken from [Antonio Meraldo's blog](https://medium.com/@meraldo.antonio)
+> * [Part 1](https://towardsdatascience.com/customer-lifetime-value-estimation-via-probabilistic-modeling-d5111cb52dd)
+> * [Part 2](https://towardsdatascience.com/bayesian-customer-lifetime-values-modeling-using-pymc3-d770676f5c06)
+
 <b>More in the [Presentation](/latex/beamer/practical-bayes/lecture-6/lecture-6.pdf)</b>
