@@ -7,7 +7,7 @@ Advanced modeling is not about conjugate distributions (although they are someti
 Successful research will also require skills in solving problems of convergence, parameterization, selection from several models. A course with a focus on programming in Python / PyMC.
 
 ## Lecture 1
-Introducing Bayesian thinking and practical definitions of the famous Bayes formula
+Introducing Bayesian thinking and practical definitions of the famous Bayes formula.
 
 $$
 p(\theta|\;\mathcal{D}) = \frac{p(\mathcal{D}|\;\theta)p(\theta)}{p(\mathcal{D})}
@@ -78,20 +78,89 @@ In most cases it is satisfactory to start simple and relax assumptions.
 ![airlines](/images/airline_passengers.png)
 
 
-> More at the [Presentation](/latex/beamer/practical-bayes/lecture-1/lecture-1.pdf)
+<b>More at the [Presentation](/latex/beamer/practical-bayes/lecture-1/lecture-1.pdf)</b>
 
 
 ## Lecture 2
-More at the [Presentation](/latex/beamer/practical-bayes/lecture-2/lecture-2.pdf)
+
+Hierarchical modelling.
+
+### Classical Econometrics view:
+
+* All the groups are independent. **Pooled Model**
+
+$$
+    y_{k,i} = \alpha + \beta x_{k,i} + \varepsilon_{i,k}
+$$
+
+* Groups have significant differences. **Fixed Effect Model**
+
+$$
+    y_{k,i} = \alpha_{k} + \beta x_{k,i} + \varepsilon_{i,k}
+$$
+
+* Groups have non significant, random differences. **Random Effects Model**
+
+$$
+    y_{k,i} = \alpha + \beta x_{k,i} + u_{k} + \varepsilon_{i,k}
+$$
+
+### Bayesian Hierarchy
+Consider
+$$
+    y_{k,i} = \alpha + \beta x_{k,i} + u_{k} + \varepsilon_{i,k}
+$$
+
+Let's rearrange terms
+
+$$
+    y_{k,i} = (\alpha + u_{k}) + \beta x_{k,i} + \varepsilon_{i,k}
+$$
+
+* $\alpha$ - population mean
+* $\alpha_k = \alpha + u_k$ - group mean
+
+In a Bayesian analysis we need priors. There is more than one way to set them up.
+<div style="display: flex;">
+<div style="width: 50%;">
+
+<h4>Centered parametrization</h4>
+
+\begin{align*}
+    \alpha &\sim \operatorname{Normal}(\bar\mu, \bar\sigma)\\
+    \alpha_k &\sim \operatorname{Normal}(\alpha, \sigma)
+\end{align*}
+</div>
+<div style="width: 50%;">
+
+<h4>Non centered parametrization</h4>
+
+\begin{align*}
+    \alpha &\sim \operatorname{Normal}(\bar\mu, \bar\sigma)\\
+    u_k &\sim \operatorname{Normal}(0, 1)\\
+    \alpha_k & = \alpha + u_k \cdot \sigma
+\end{align*}
+</div>
+</div>
+
+$\sigma$ is a measure of group differences
+
+* $\sigma \to 0$: Pooled Model
+* Small $\sigma$: Random Effects / Partial Pooling
+* Large $\sigma$: Fixed Effects / Unpooled Model
+
+$\sigma$ interpolates between the models
+
+<b>More at the [Presentation](/latex/beamer/practical-bayes/lecture-2/lecture-2.pdf)</b>
 
 ## Lecture 3
-More at the [Presentation](/latex/beamer/practical-bayes/lecture-3/lecture-3.pdf)
+<b>More at the [Presentation](/latex/beamer/practical-bayes/lecture-3/lecture-3.pdf)</b>
 
 ## Lecture 4
-More at the [Presentation](/latex/beamer/practical-bayes/lecture-4/lecture-4.pdf)
+<b>More at the [Presentation](/latex/beamer/practical-bayes/lecture-4/lecture-4.pdf)</b>
 
 ## Lecture 5
-More at the [Presentation](/latex/beamer/practical-bayes/lecture-5/lecture-5.pdf)
+<b>More at the [Presentation](/latex/beamer/practical-bayes/lecture-5/lecture-5.pdf)</b>
 
 ## Lecture 6
-More at the [Presentation](/latex/beamer/practical-bayes/lecture-6/lecture-6.pdf)
+<b>More at the [Presentation](/latex/beamer/practical-bayes/lecture-6/lecture-6.pdf)</b>
