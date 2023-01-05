@@ -67,7 +67,7 @@ DISPLAY_CATEGORIES_ON_MENU = False
 DISPLAY_PAGES_ON_MENU = False
 MENUITEMS = (
     ("Maxim Kochurov", "/pages/maxim-kochurov"),
-    ("Course", "/pages/practical-bayes"),
+    ("Teaching", "/pages/practical-bayes"),
     ("Categories", "/categories.html"), 
     ("Tags", "/tags.html"),
     ("Archives", "/archives.html"), 

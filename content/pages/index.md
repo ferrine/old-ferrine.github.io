@@ -1,33 +1,21 @@
 Title: Maxim Kochurov
 <style>
-.row::after {
-  content: "";
-  clear: both;
-  display: table;
-}
-
-.column {
-  float: fill;
-  padding: 10px;
-}
-.image {
-  float: left;
-  padding: 10px;
-}
 .logos img {
-  padding: 10px;
+  margin: 10px;
   height: 50px;
 }
+
 </style>
-<div class="row">
-<div class="image">
-<image src=/images/profile_photo.jpeg style="width: 250px">
+<div class="image-comment">
+    <div class="image">
+    <image src=/images/profile_photo.jpeg>
+    </div>
+    <div class="comment">
+      <h2>About me</h2>
+      <p> I am a principal data scientist at <a href=https://pymc-labs.io>PyMC Labs</a> where we build open source software and provide consulting services to large companies and small startups. We do top notch Bayesian modelling for challenging causal problems that are not solved with classical fit-predict paradigm.
+    </div>
 </div>
-<div class="column">
-<h2>About me</h2>
-<p> I am a principal data scientist at <a href=https://pymc-labs.io>PyMC Labs</a> where we build open source software and provide consulting services to large companies and small startups. We do top notch Bayesian modelling for challenging causal problems that are not solved with classical fit-predict paradigm.
-</div>
-</div>
+
 
 ## Projects
 
