@@ -13,7 +13,7 @@ jobs:
   latex:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         lfs: true
     - uses: xu-cheng/texlive-action/full@v1
@@ -39,7 +39,7 @@ jobs:
           else
               echo "TARGET=html" >> "$GITHUB_ENV"
           fi
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: true
           lfs: true
