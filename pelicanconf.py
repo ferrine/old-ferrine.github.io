@@ -7,7 +7,18 @@ MARKUP = ("md", "ipynb")
 
 PLUGINS = [nb_markup, "render_math"]
 MATH_JAX = {'tex_extensions': ['color.js','mhchem.js']}
-
+MARKDOWN = {
+    'extension_configs': {
+        'markdown.extensions.codehilite': {'css_class': 'highlight'},
+        'markdown.extensions.extra': {},
+        'markdown.extensions.meta': {},
+        'markdown.extensions.toc': {
+            'permalink': True,
+            'permalink_class': "anchor-link",
+        },
+    },
+    'output_format': 'html5',
+}
 IPYNB_SKIP_CSS = True
 IGNORE_FILES = [".ipynb_checkpoints"]
 

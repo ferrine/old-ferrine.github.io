@@ -48,14 +48,14 @@ Every next block there is a relaxed assumption which, in turn, needs a new prior
 You observational model may contain zeros, e.g. you sell many products and study history of a single one.
 
 <div class="image-comment">
-<style>
+<!-- <style>
 @media (min-width: 540px) {
     .image-comment .image {
         max-width: 10%; 
         min-width: 100px;
     }
 }
-</style>
+</style> -->
 <div class="image">
 <image src="/images/shop.png">
 </div>
@@ -69,16 +69,17 @@ You observational model may contain zeros, e.g. you sell many products and study
 \end{align*}
 </div>
 </div>
+
 #### Example 2
 In most cases it is satisfactory to start simple and relax assumptions.
 
 1. Assume your time series model does not have seasonality and outliers, estimate it.
 2. At this point you have a better understanding of the limitations you had at the previous step, introduce seasonality, reuse as much as possible.
 
-![airlines](/images/airline_passengers.png)
+<image src="/images/airline_passengers.png" style="width: 100%">
 
 
-<b>More at the [Presentation](/latex/beamer/practical-bayes/lecture-1/lecture-1.pdf)</b>
+<b>More in the [Presentation](/latex/beamer/practical-bayes/lecture-1/lecture-1.pdf)</b>
 
 
 ## Lecture 2
@@ -87,16 +88,10 @@ Hierarchical modelling.
 
 ### Classical Econometrics view:
 
-* All the groups are independent. **Pooled Model**
+* All the groups are independent and treated similarly. **Pooled Model**
 
 $$
     y_{k,i} = \alpha + \beta x_{k,i} + \varepsilon_{i,k}
-$$
-
-* Groups have significant differences. **Fixed Effect Model**
-
-$$
-    y_{k,i} = \alpha_{k} + \beta x_{k,i} + \varepsilon_{i,k}
 $$
 
 * Groups have non significant, random differences. **Random Effects Model**
@@ -105,62 +100,116 @@ $$
     y_{k,i} = \alpha + \beta x_{k,i} + u_{k} + \varepsilon_{i,k}
 $$
 
+
+* Groups have significant differences. **Fixed Effect Model**
+
+$$
+    y_{k,i} = \alpha_{k} + \beta x_{k,i} + \varepsilon_{i,k}
+$$
+
 ### Bayesian Hierarchy
-Consider
-$$
-    y_{k,i} = \alpha + \beta x_{k,i} + u_{k} + \varepsilon_{i,k}
-$$
 
-Let's rearrange terms
+Bayesian modelling allows to interpolate between pooled, fixed and random effect models.
+What you do as a modeller, you set a prior that tells the model which interaction strength you assume.
 
-$$
-    y_{k,i} = (\alpha + u_{k}) + \beta x_{k,i} + \varepsilon_{i,k}
-$$
+#### Example
 
-* $\alpha$ - population mean
-* $\alpha_k = \alpha + u_k$ - group mean
+* You model a country macroeconomic or marketing model, you might assume that countries have similar behavior, yet different.
+* You model region level marketing model, compared to the previous example differences between regions are considered smaller, yet outliers may appear.
 
-In a Bayesian analysis we need priors. There is more than one way to set them up.
-<div style="display: flex;">
-<div style="width: 50%;">
+These two cases differ by the perceived strength of similarity.
+In the traditional econometrics you only have a hard switch between model types.
+Bayesian modelling provides you with the one model it is called Hierarchical.
+It provides you with a "slider" to interpolate between *Pooled Model* and *Fixed Effects Model* extreme cases.
+Whenever you see "Hierarchical Bayesian model", think of a classical econometrics and multiple subjects.
+Prior specification will allow you to choose the right spot.
 
-<h4>Centered parametrization</h4>
-
-\begin{align*}
-    \alpha &\sim \operatorname{Normal}(\bar\mu, \bar\sigma)\\
-    \alpha_k &\sim \operatorname{Normal}(\alpha, \sigma)
-\end{align*}
-</div>
-<div style="width: 50%;">
-
-<h4>Non centered parametrization</h4>
-
-\begin{align*}
-    \alpha &\sim \operatorname{Normal}(\bar\mu, \bar\sigma)\\
-    u_k &\sim \operatorname{Normal}(0, 1)\\
-    \alpha_k & = \alpha + u_k \cdot \sigma
-\end{align*}
-</div>
-</div>
-
-$\sigma$ is a measure of group differences
-
-* $\sigma \to 0$: Pooled Model
-* Small $\sigma$: Random Effects / Partial Pooling
-* Large $\sigma$: Fixed Effects / Unpooled Model
-
-$\sigma$ interpolates between the models
-
-<b>More at the [Presentation](/latex/beamer/practical-bayes/lecture-2/lecture-2.pdf)</b>
+<b>More in the [Presentation](/latex/beamer/practical-bayes/lecture-2/lecture-2.pdf)</b>
 
 ## Lecture 3
-<b>More at the [Presentation](/latex/beamer/practical-bayes/lecture-3/lecture-3.pdf)</b>
+AB testing.
+
+The world of AB testing is huge and I don't attempt (yet) to cover all the possible scenarios.
+What I do is translate the classical AB testing workflow into Bayesian framework.
+The big picture is you
+
+1. Prepare the experiment and the baseline.
+2. Plan the experiment, its duration and the success criteria.
+3. Collect the results on completion, interpret.
+
+All the 3 steps are extremely well studied and applied in every mature company.
+However, there are inconsistencies as well as missed opportunities in planning and interpretation.
+
+### Preparation
+While experiment preparation a Bayesian modeller should ask questions to set priors.
+These questions are related to the experiment outcomes and are highly business oriented.
+While two distant parties interact, Business and Analytics, they have common touch points, the priors.
+
+* Do you expect after changes in B you have a 100% increase? Very sure No
+* Do you expect after changes in B you have a 1000% increase? Very sure No
+* Do you expect after changes in B you have a 10% increase? Unlikely
+* Do you expect after changes in B you have a 3% increase? Maybe
+* Do you expect after changes in B you have a 3% decrease? Maybe
+* Do you expect after changes in B you have an X% decrease? Your answer
+
+Questions are easy to ask and they very are much related to the core model.
+Bayesian approach allows to link Business people to the Math people.
+Right questions matter.
+
+### Planning
+
+<div class="image-comment">
+<div class="image">
+<image src="/images/fast_accurate.png">
+</div>
+<div class="comment">
+
+Planning is little different from the <a href="https://en.wikipedia.org/wiki/Power_of_a_test">power analysis</a> from a classical approach.
+Both alternatives solve the same problem
+
+</div>
+</div>
+
+* What is the required number of observations to make a conclusion?
+* What is the quality of the conclusion if I make a decision after seeing N observations?
+
+> The impossibility principle. You can't be fast in data collection and accurate at the same time.
+
+
+### Interpretation
+<image src="/images/confidence-intervals.png" style="width: 100%">
+
+The confidence interval is overused and overly-simplified in my opinion.
+Thus, it is often interpreted incorrectly.
+The correct but not very intuitive interpretation can be found in an [explanation by Joe Felsenstein](https://evolution.gs.washington.edu/gs560/2011/lecture3.pdf)
+
+> You could say that if you do this throughout your career, 95% of these intervals will contain the true value.
+
+The Bayesian posterior allows for a targeted questioning.
+You can directly "ask" the model simple questions like:
+
+* What is the probability experiment uplift is greater than zero?
+* What is the probability experiment uplift is greater than 3%?
+* What is the 5% [value at risk](https://en.wikipedia.org/wiki/Value_at_risk) of the experiment uplift?
+
+More complex multi-experiment questions:
+
+* What is the probability experiment A is better than B?
+* What is the probability experiment A is the best among A, B, C and D?
+
+Advanced questions are not complicated are few lines of code as well (given you know how to translate uplift to profit amounts):
+
+* What is the expected profit from implementing A? Or B?
+* What is the 5% value at risk profit implementing A?
+* What is the 95% interval of most probable profit implementing A?
+
+<b>More in the [Presentation](/latex/beamer/practical-bayes/lecture-3/lecture-3.pdf)</b>
 
 ## Lecture 4
-<b>More at the [Presentation](/latex/beamer/practical-bayes/lecture-4/lecture-4.pdf)</b>
+<b>More in the [Presentation](/latex/beamer/practical-bayes/lecture-4/lecture-4.pdf)</b>
 
 ## Lecture 5
-<b>More at the [Presentation](/latex/beamer/practical-bayes/lecture-5/lecture-5.pdf)</b>
+<b>More in the [Presentation](/latex/beamer/practical-bayes/lecture-5/lecture-5.pdf)</b>
 
 ## Lecture 6
-<b>More at the [Presentation](/latex/beamer/practical-bayes/lecture-6/lecture-6.pdf)</b>
+<b>More in the [Presentation](/latex/beamer/practical-bayes/lecture-6/lecture-6.pdf)</b>

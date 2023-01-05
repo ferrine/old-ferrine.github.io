@@ -561,20 +561,20 @@ productivity $A$
 \end{frame}
 \begin{frame}{Treating Hierarchy}
 Classical Econometrics view:
-    \begin{enumerate}
-        \item All the groups are independent. \textbf{Pooled Model}
-\begin{equation*}
-    y_{k,i} = \alpha + \beta x_{k,i} + \varepsilon_{i,k}
-\end{equation*}
+\begin{enumerate}
+        \item All the groups are independent and treated similarly. \textbf{Pooled Model}
+    \begin{equation*}
+        y_{k,i} = \alpha + \beta x_{k,i} + \varepsilon_{i,k}
+    \end{equation*}
         \item Groups have significant differences. \textbf{Fixed Effect Model}
-\begin{equation*}
-    y_{k,i} = \alpha_{k} + \beta x_{k,i} + \varepsilon_{i,k}
-\end{equation*}
+    \begin{equation*}
+        y_{k,i} = \alpha_{k} + \beta x_{k,i} + \varepsilon_{i,k}
+    \end{equation*}
         \item Groups have non significant, random differences. \textbf{Random Effects Model}
-\begin{equation*}
-    y_{k,i} = \alpha + \beta x_{k,i} + u_{k} + \varepsilon_{i,k}
-\end{equation*}
-    \end{enumerate}
+    \begin{equation*}
+        y_{k,i} = \alpha + \beta x_{k,i} + u_{k} + \varepsilon_{i,k}
+    \end{equation*}
+\end{enumerate}
 Where
 \begin{equation*}
     \E u_{k,i} = 0,\quad \E \varepsilon_{k,i} = 0
