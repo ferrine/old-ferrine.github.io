@@ -21,7 +21,7 @@ Title: Maxim Kochurov
 </style>
 <div class="row">
 <div class="image">
-<image src=/images/profile_photo.png style="width: 250px">
+<image src=/images/profile_photo.jpeg style="width: 250px">
 </div>
 <div class="column">
 <h2>About me</h2>
@@ -58,6 +58,8 @@ I'm an [invited lecturer](https://www.econ.msu.ru/students/mag/curricula/eco/and
 <image src=/images/msu-logo.png>
 <image src=/images/sk-logo.png>
 <image src=/images/bayesgroup-logo.png>
+<image src=/images/samsung-logo.png>
+<image src=/images/yandex-logo.png>
 <image src=/images/ntechlab-logo.png>
 </div>
 
