@@ -268,13 +268,4 @@ Bayesian approach helps to link business knowledge about retention and purchase 
 The frequentist counterpart would treat every customer separately, loosing essential bits ignoring similarities between them.
 Hierarchical approach provides additional insights about the distribution of population level activity levels and retention.
 
-$$
-    P(x, t_x, T|\; \lambda, p) = \delta_{x>0} \left[p (1-p)^{x-1}\lambda^xe^{-\lambda t_x}\right] + (1-p)^{x}\lambda^xe^{-\lambda T}
-$$
-
-where
-
-* $\lambda$ is average number of purchases per period.
-* $p$ is the probability to stop being a client.
-
 <b>More in the [Presentation](/latex/beamer/practical-bayes/lecture-6/lecture-6.pdf)</b>
