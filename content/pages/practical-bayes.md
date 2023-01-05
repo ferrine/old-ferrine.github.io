@@ -206,10 +206,75 @@ Advanced questions are not complicated are few lines of code as well (given you 
 <b>More in the [Presentation](/latex/beamer/practical-bayes/lecture-3/lecture-3.pdf)</b>
 
 ## Lecture 4
+Gaussian Processes.
+
+A powerful and expressive approach to capture interactions between objects are Gaussian Processes.
+If you do not know what are Gaussian Processes yet, different contexts raise various interpretations
+
+* For time series you can think "GP is a smooth interpolation of the time series".
+* For spatial data, similar to time series, "GP is a smooth interpolation of the spatial data".
+* For hierarchical modelling you can read GP as "differences between objects depend on attributes in some smooth way".
+
+The above interpretation is overly simplified, but relates us to the most valuable usage of GPs in the Bayesian modelling.
+Hierarchical models are not only models where objects are distinct, these models may appear in a structured way.
+
+#### Example
+
+The famous [example from Andrew Gelman](https://statmodeling.stat.columbia.edu/2014/01/21/everything-need-know-bayesian-statistics-learned-eight-schools/) revisited with school coordinates.
+<div class="image-comment">
+<div class="image">
+<image src="/images/schools_gp_posterior.png">
+</div>
+<div class="comment">
+<b>Spatial 8 schools</b>
+<p> Gaussian process interpolates between schools taking in account proximity.
+A prediction for a novel location is possible and will be the more confident the closer point is to available observations.
+</div>
+</div>
+
+The above example shows how available information could be inserted into the simpler model.
+In practice, this addition comes with relatively little code changes and interpretable additional parameters.
+There is, probably, no easier model but Gaussian Process that can be both for the example:
+
+1. Expressive enough to capture the complicated nature of spatial proximity.
+2. Interpretable enough to understand every new parameter.
+
+
 <b>More in the [Presentation](/latex/beamer/practical-bayes/lecture-4/lecture-4.pdf)</b>
 
 ## Lecture 5
+Gaussian Processes for time series.
+
+$$
+    x_t \sim \underbrace{g(t)}_{non-periodic} + \underbrace{s(t)}_{periodic} + \underbrace{h(t)}_{holidays}
+$$
+
+Time series models, when backed by Gaussian Processes, can be decomposed into trend, seasonality and residuals.
+Bayesian approach decomposes monolithic [STL](https://www.statsmodels.org/devel/examples/notebooks/generated/stl_decomposition.html) model into building blocks making it possible to create hierarchical extensions to the traditional model.
+
 <b>More in the [Presentation](/latex/beamer/practical-bayes/lecture-5/lecture-5.pdf)</b>
 
 ## Lecture 6
+
+Customer Lifetime Model using PyMC.
+
+$$
+\text{CLV} = \text{Number of Purchases} \times \text{Values of Purchases}
+$$
+
+CLV is a very popular marketing analysis metric which helps to forecast future revenue or compare effectiveness of marketing companies.
+Traditional, frequentist CLV is a point estimate without uncertainties in mind.
+Bayesian approach helps to link business knowledge about retention and purchase activity with model parameters.
+The frequentist counterpart would treat every customer separately, loosing essential bits ignoring similarities between them.
+Hierarchical approach provides additional insights about the distribution of population level activity levels and retention.
+
+$$
+    P(x, t_x, T|\; \lambda, p) = \delta_{x>0} \left[p (1-p)^{x-1}\lambda^xe^{-\lambda t_x}\right] + (1-p)^{x}\lambda^xe^{-\lambda T}
+$$
+
+where
+
+* $\lambda$ is average number of purchases per period.
+* $p$ is the probability to stop being a client.
+
 <b>More in the [Presentation](/latex/beamer/practical-bayes/lecture-6/lecture-6.pdf)</b>
