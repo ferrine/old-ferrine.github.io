@@ -62,9 +62,12 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                        <li><a href="/categories">Categories</a></li>
+                        <li><a href="/pages/maxim-kochurov">Maxim Kochurov</a></li>
+                        <li><a href="/pages/practical-bayes">Teaching</a></li>
+                        <li><a href="/categories.html">Categories</a></li>
+                        <li><a href="/tags.html">Tags</a></li>
+                        <li><a href="/archives.html">Archives</a></li>
 
-                            <li class="active"><a href="https://ferrine.github.io/pages/maxim-kochurov">Maxim Kochurov</a></li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -91,30 +94,51 @@
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
     <article>
         <style>
-.row::after {
-  content: "";
-  clear: both;
-  display: table;
+.logos img {
+  margin: 10px;
+  height: 50px;
 }
 
-.column {
-  float: fill;
-  padding: 10px;
-}
-.image {
-  float: left;
-  padding: 10px;
-}
 </style>
-<div class="row">
-<div class="image">
-<image src=/images/profile_photo.jpg width=250px>
+<div class="image-comment">
+    <div class="image">
+    <image src=/images/profile_photo.jpeg>
+    </div>
+    <div class="comment">
+      <h2>About me</h2>
+      <p> I am a principal data scientist at <a href=https://pymc-labs.io>PyMC Labs</a> where we build open source software and provide consulting services to large companies and small startups. We do top notch Bayesian modelling for challenging causal problems that are not solved with classical fit-predict paradigm.
+    </div>
 </div>
-<div class="column">
-Hello, I'm Max!
-<p> I'm a passionate Bayesian practitioner at <a href=https://pymc-labs.io>PyMC Labs</a> building open source software. For living, I provide consultancy about statistics and how to address questions with data. Especially, "right" questions.
+
+<h2 id="projects">Projects<a class="anchor-link" href="#projects" title="Permanent link">&para;</a></h2>
+<h3 id="neuroscience">Neuroscience<a class="anchor-link" href="#neuroscience" title="Permanent link">&para;</a></h3>
+<p>Neuroscience backed model to quantify treatment effect on human brain for a <em>Pharmaceutical company</em>. Using a Bayesian model it became possible to work on scarce experimental data and quantify brain activity metrics from an interactive game.</p>
+<h3 id="ab-testing">AB Testing<a class="anchor-link" href="#ab-testing" title="Permanent link">&para;</a></h3>
+<p>Multiple AB testing projects evolved into a principled way to establish priors, plan the experiment and interpret the results. I've included this knowledge into my <a href="/tag/practical-bayes.html">Practical Bayes course</a> and gave a <a href="/latex/beamer/talks/ods-ab-testing-17-12-2022/ods-ab-testing-17-12-2022.pdf">talk</a> at the <a href="https://ods.ai/events/data-elka-2022">ODS workshop</a>.</p>
+<h3 id="bioengineering">Bioengineering<a class="anchor-link" href="#bioengineering" title="Permanent link">&para;</a></h3>
+<p>Bioengineering project to understand molecules structure. The main challenge is temporal nature of noisy observations. The model had to infer the <a href="https://en.wikipedia.org/wiki/Hidden_Markov_model">HMM</a> structure from hundreds of noisy time series. Classical machine learning had failed to take in account the structured solution.</p>
+<h3 id="other">Other<a class="anchor-link" href="#other" title="Permanent link">&para;</a></h3>
+<p>Other projects include marketing mix model, chemistry multilevel models and knowledge transfer between past and current experiments.</p>
+<h2 id="teaching">Teaching<a class="anchor-link" href="#teaching" title="Permanent link">&para;</a></h2>
+<p>I'm an <a href="https://www.econ.msu.ru/students/mag/curricula/eco/andan/news/News.20220802192752_5070/">invited lecturer</a> at Moscow State University since 2022. Recent updates about the course can be found <a href="/tag/practical-bayes.html">here</a>.</p>
+<h2 id="experience">Experience<a class="anchor-link" href="#experience" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Bayesian deep learning research at <a href="https://bayesgroup.ru/">Bayes Group</a> 2017-2020</li>
+<li>Large scale computer vision and distributed deep learning for collaborative environments</li>
+<li>Strong Python, Linux and CI/CD experience</li>
+</ul>
+<div class="logos">
+<image src=/images/pymc-labs-logo.png>
+<image src=/images/msu-logo.png>
+<image src=/images/sk-logo.png>
+<image src=/images/bayesgroup-logo.png>
+<image src=/images/samsung-logo.png>
+<image src=/images/yandex-logo.png>
+<image src=/images/ntechlab-logo.png>
 </div>
-</div>
+
+<h2 id="contacts">Contacts<a class="anchor-link" href="#contacts" title="Permanent link">&para;</a></h2>
+<p>Interested in working with me? You can write directly to my work <a href="mailto:max.kochurov@pymc-labs.io">email</a> ot just text me in <a href="https://t.me/ferres">Telegram</a>.</p>
     </article>
             </div>
         </div>
@@ -129,6 +153,14 @@ Hello, I'm Max!
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <ul class="list-inline text-center">
                             <li>
+                                <a href="https://t.me/ferres">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-telegram fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
                                 <a href="https://twitter.com/ferrine96">
                                     <span class="fa-stack fa-lg">
                                         <i class="fa fa-circle fa-stack-2x"></i>
@@ -137,7 +169,15 @@ Hello, I'm Max!
                                 </a>
                             </li>
                             <li>
-                                <a href="https://github.com/ferrine/ferrine.github.io">
+                                <a href="https://www.linkedin.com/in/ferrine">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/ferrine/">
                                     <span class="fa-stack fa-lg">
                                         <i class="fa fa-circle fa-stack-2x"></i>
                                         <i class="fa fa-github fa-stack-1x fa-inverse"></i>

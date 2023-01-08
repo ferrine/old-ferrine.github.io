@@ -9,3 +9,32 @@
     -webkit-transition: opacity .25s ease-in-out .0s;
     transition: opacity .25s ease-in-out .0s;
 }
+
+.image-comment {
+    display: flex;
+}
+
+.image-comment .image, .image-comment .comment {
+    margin: 10px;
+  }
+
+.image-comment .image img {
+    width: 100%;
+}
+
+
+@media (max-width: 540px) {
+    .image-comment {
+        flex-direction: column;
+    }
+    .image-comment .image {
+        width: 100%;
+    }
+}
+
+@media not (max-width: 540px) {
+    .image-comment .image {
+        max-width: 30%;
+        min-width: 200px;
+    }
+}

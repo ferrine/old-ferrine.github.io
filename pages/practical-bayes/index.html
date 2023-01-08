@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+        <title>Practical Bayes</title>
+
+            <link href="https://ferrine.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="In Search of the Holy Posterior Full Atom Feed" />
+        <!-- Bootstrap Core CSS -->
+        <link href="https://ferrine.github.io/theme/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom CSS -->
+        <link href="https://ferrine.github.io/theme/css/clean-blog.min.css" rel="stylesheet">
+
+        <!-- Code highlight color scheme -->
+            <link href="https://ferrine.github.io/theme/css/code_blocks/github.css" rel="stylesheet">
+
+            <!-- CSS specified by the user -->
+            <link href="https://ferrine.github.io/theme/css/override.css" rel="stylesheet">
+
+        <!-- Custom Fonts -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="In Search of the Holy Posterior">
+            <meta name="twitter:card" content="summary_large_image">
+            <meta name="twitter:site" content="@ferrine96">
+            <meta name="twitter:title" content="In Search of the Holy Posterior">
+            <meta name="twitter:description" content="View the blog.">
+                <meta name="twitter:image" content="https://ferrine.github.io/images/header.jpg">
+</head>
+
+<body class="page-practical-bayes">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="https://ferrine.github.io/">In Search of the Holy Posterior</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/pages/maxim-kochurov">Maxim Kochurov</a></li>
+                        <li><a href="/pages/practical-bayes">Teaching</a></li>
+                        <li><a href="/categories.html">Categories</a></li>
+                        <li><a href="/tags.html">Tags</a></li>
+                        <li><a href="/archives.html">Archives</a></li>
+
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+        <header class="intro-header" style="background-image: url('https://ferrine.github.io/images/header.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>Practical Bayes</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+    <article>
+        <p>The Practical Bayes course was first held at <a href="https://www.econ.msu.ru/students/mag/curricula/eco/andan/news/News.20220802192752_5070/">Moscow State University, Autumn 2022</a></p>
+<p>This course is aimed at mastering Bayesian methods in practice. 
+Advanced modeling is not about conjugate distributions (although they are sometimes useful), but mostly about projecting knowledge about the problem into code. 
+Successful research will also require skills in solving problems of convergence, parameterization, selection from several models. A course with a focus on programming in Python / PyMC.</p>
+<h2 id="lecture-1">Lecture 1<a class="anchor-link" href="#lecture-1" title="Permanent link">&para;</a></h2>
+<p>Introducing Bayesian thinking and practical definitions of the famous Bayes formula.</p>
+<div class="math">$$
+p(\theta|\;\mathcal{D}) = \frac{p(\mathcal{D}|\;\theta)p(\theta)}{p(\mathcal{D})}
+$$</div>
+<h3 id="priors">Priors<a class="anchor-link" href="#priors" title="Permanent link">&para;</a></h3>
+<p>Everything starts with good priors <span class="math">\(p(\theta)\)</span> where you put your business knowledge into the model.
+Priors often mean that you think of the model, the parameters meaning, causal graph.
+Often claimed subjective nature of the priors usually improves the overall quality of the analysis. 
+Good priors usually mean they can be explained in words to non math audience.</p>
+<h4 id="example-1">Example 1<a class="anchor-link" href="#example-1" title="Permanent link">&para;</a></h4>
+<p>You are a researcher conducting an AB test. 
+You test your new approach and expect an improvement. Compare these model priors:</p>
+<ol>
+<li>A non subjective prior where the the improvement may vary from <span class="math">\(-100\%\)</span> to <span class="math">\(+\infty\%\)</span>, may be any.</li>
+<li>An informed prior where the improvement is within <span class="math">\(-5\%\)</span> and <span class="math">\(+5\%\)</span>.</li>
+</ol>
+<p>A more informed prior is subjective, based on past experience but makes more sense compared to a non informed prior.</p>
+<h4 id="example-2">Example 2<a class="anchor-link" href="#example-2" title="Permanent link">&para;</a></h4>
+<p>You are an economist estimating elasticity. Compare these two priors:</p>
+<ol>
+<li>Elasticity may be any positive number, from <span class="math">\(0\)</span> to <span class="math">\(+\infty\%\)</span>.</li>
+<li>Elasticity is positive and is for sure no more than 3.</li>
+</ol>
+<p>A more informed prior is subjective, depends on a product, optimism, historical data and conforms with past research </p>
+<h3 id="likelihood-and-model-structure">Likelihood and model structure<a class="anchor-link" href="#likelihood-and-model-structure" title="Permanent link">&para;</a></h3>
+<p><image src="/images/bias-variance.png" style="width: 100%">
+A likelihood can be treated informally as nuances of observational model you take in account.
+A likelihood may be simplifying or complex, of overly-complicated.
+These nuances are outliers, time dependencies, correlations in observations and so on.
+The more complicated is likelihood and model structure, the less strict assumptions are present in the model.
+Every next block there is a relaxed assumption which, in turn, needs a new prior to constrain variation of the model.</p>
+<h4 id="example-1_1">Example 1<a class="anchor-link" href="#example-1_1" title="Permanent link">&para;</a></h4>
+<p>You observational model may contain zeros, e.g. you sell many products and study history of a single one.</p>
+<div class="image-comment">
+<!-- <style>
+@media (min-width: 540px) {
+    .image-comment .image {
+        max-width: 10%; 
+        min-width: 100px;
+    }
+}
+</style> -->
+<div class="image">
+<image src="/images/shop.png">
+</div>
+<div class="comment">
+\begin{align*}
+        \text{make an order} &\sim \operatorname{Bernoulli}(p) \\
+        \text{order amount} &\sim \begin{cases}
+        \operatorname{Gamma}(\alpha, \beta)&, \text{make an order} = 1\\
+        0&, \text{make an order} =0
+        \end{cases}
+\end{align*}
+</div>
+</div>
+
+<h4 id="example-2_1">Example 2<a class="anchor-link" href="#example-2_1" title="Permanent link">&para;</a></h4>
+<p>In most cases it is satisfactory to start simple and relax assumptions.</p>
+<ol>
+<li>Assume your time series model does not have seasonality and outliers, estimate it.</li>
+<li>At this point you have a better understanding of the limitations you had at the previous step, introduce seasonality, reuse as much as possible.</li>
+</ol>
+<p><image src="/images/airline_passengers.png" style="width: 100%"></p>
+<p><b>More in the <a href="/latex/beamer/practical-bayes/lecture-1/lecture-1.pdf">Presentation</a></b></p>
+<h2 id="lecture-2">Lecture 2<a class="anchor-link" href="#lecture-2" title="Permanent link">&para;</a></h2>
+<p>Hierarchical modelling.</p>
+<h3 id="classical-econometrics-view">Classical Econometrics view<a class="anchor-link" href="#classical-econometrics-view" title="Permanent link">&para;</a></h3>
+<ul>
+<li>All the groups are independent and treated similarly. <strong>Pooled Model</strong></li>
+</ul>
+<div class="math">$$
+    y_{k,i} = \alpha + \beta x_{k,i} + \varepsilon_{i,k}
+$$</div>
+<ul>
+<li>Groups have non significant, random differences. <strong>Random Effects Model</strong></li>
+</ul>
+<div class="math">$$
+    y_{k,i} = \alpha + \beta x_{k,i} + u_{k} + \varepsilon_{i,k}
+$$</div>
+<ul>
+<li>Groups have significant differences. <strong>Fixed Effect Model</strong></li>
+</ul>
+<div class="math">$$
+    y_{k,i} = \alpha_{k} + \beta x_{k,i} + \varepsilon_{i,k}
+$$</div>
+<h3 id="bayesian-hierarchy">Bayesian Hierarchy<a class="anchor-link" href="#bayesian-hierarchy" title="Permanent link">&para;</a></h3>
+<p>Bayesian modelling allows to interpolate between pooled, fixed and random effect models.
+What you do as a modeller, you set a prior that tells the model which interaction strength you assume.</p>
+<h4 id="example">Example<a class="anchor-link" href="#example" title="Permanent link">&para;</a></h4>
+<ul>
+<li>You model a country macroeconomic or marketing model, you might assume that countries have similar behavior, yet different.</li>
+<li>You model region level marketing model, compared to the previous example differences between regions are considered smaller, yet outliers may appear.</li>
+</ul>
+<p>These two cases differ by the perceived strength of similarity.
+In the traditional econometrics you only have a hard switch between model types.
+Bayesian modelling provides you with the one model it is called Hierarchical.
+It provides you with a "slider" to interpolate between <em>Pooled Model</em> and <em>Fixed Effects Model</em> extreme cases.
+Whenever you see "Hierarchical Bayesian model", think of a classical econometrics and multiple subjects.
+Prior specification will allow you to choose the right spot.</p>
+<p><b>More in the <a href="/latex/beamer/practical-bayes/lecture-2/lecture-2.pdf">Presentation</a></b></p>
+<h2 id="lecture-3">Lecture 3<a class="anchor-link" href="#lecture-3" title="Permanent link">&para;</a></h2>
+<p>AB testing.</p>
+<p>The world of AB testing is huge and I don't attempt (yet) to cover all the possible scenarios.
+What I do is translate the classical AB testing workflow into Bayesian framework.
+The big picture is you</p>
+<ol>
+<li>Prepare the experiment and the baseline.</li>
+<li>Plan the experiment, its duration and the success criteria.</li>
+<li>Collect the results on completion, interpret.</li>
+</ol>
+<p>All the 3 steps are extremely well studied and applied in every mature company.
+However, there are inconsistencies as well as missed opportunities in planning and interpretation.</p>
+<h3 id="preparation">Preparation<a class="anchor-link" href="#preparation" title="Permanent link">&para;</a></h3>
+<p>While experiment preparation a Bayesian modeller should ask questions to set priors.
+These questions are related to the experiment outcomes and are highly business oriented.
+While two distant parties interact, Business and Analytics, they have common touch points, the priors.</p>
+<ul>
+<li>Do you expect after changes in B you have a 100% increase? Very sure No</li>
+<li>Do you expect after changes in B you have a 1000% increase? Very sure No</li>
+<li>Do you expect after changes in B you have a 10% increase? Unlikely</li>
+<li>Do you expect after changes in B you have a 3% increase? Maybe</li>
+<li>Do you expect after changes in B you have a 3% decrease? Maybe</li>
+<li>Do you expect after changes in B you have an X% decrease? Your answer</li>
+</ul>
+<p>Questions are easy to ask and they very are much related to the core model.
+Bayesian approach allows to link Business people to the Math people.
+Right questions matter.</p>
+<h3 id="planning">Planning<a class="anchor-link" href="#planning" title="Permanent link">&para;</a></h3>
+<div class="image-comment">
+<div class="image">
+<image src="/images/fast_accurate.png">
+</div>
+<div class="comment">
+
+Planning is little different from the <a href="https://en.wikipedia.org/wiki/Power_of_a_test">power analysis</a> from a classical approach.
+Both alternatives solve the same problem
+
+</div>
+</div>
+
+<ul>
+<li>What is the required number of observations to make a conclusion?</li>
+<li>What is the quality of the conclusion if I make a decision after seeing N observations?</li>
+</ul>
+<blockquote>
+<p>The impossibility principle. You can't be fast in data collection and accurate at the same time.</p>
+</blockquote>
+<h3 id="interpretation">Interpretation<a class="anchor-link" href="#interpretation" title="Permanent link">&para;</a></h3>
+<p><image src="/images/confidence-intervals.png" style="width: 100%"></p>
+<p>The confidence interval is overused and overly-simplified in my opinion.
+Thus, it is often interpreted incorrectly.
+The correct but not very intuitive interpretation can be found in an <a href="https://evolution.gs.washington.edu/gs560/2011/lecture3.pdf">explanation by Joe Felsenstein</a></p>
+<blockquote>
+<p>You could say that if you do this throughout your career, 95% of these intervals will contain the true value.</p>
+</blockquote>
+<p>The Bayesian posterior allows for a targeted questioning.
+You can directly "ask" the model simple questions like:</p>
+<ul>
+<li>What is the probability experiment uplift is greater than zero?</li>
+<li>What is the probability experiment uplift is greater than 3%?</li>
+<li>What is the 5% <a href="https://en.wikipedia.org/wiki/Value_at_risk">value at risk</a> of the experiment uplift?</li>
+</ul>
+<p>More complex multi-experiment questions:</p>
+<ul>
+<li>What is the probability experiment A is better than B?</li>
+<li>What is the probability experiment A is the best among A, B, C and D?</li>
+</ul>
+<p>Advanced questions are not complicated are few lines of code as well (given you know how to translate uplift to profit amounts):</p>
+<ul>
+<li>What is the expected profit from implementing A? Or B?</li>
+<li>What is the 5% value at risk profit implementing A?</li>
+<li>What is the 95% interval of most probable profit implementing A?</li>
+</ul>
+<p><b>More in the <a href="/latex/beamer/practical-bayes/lecture-3/lecture-3.pdf">Presentation</a></b></p>
+<h2 id="lecture-4">Lecture 4<a class="anchor-link" href="#lecture-4" title="Permanent link">&para;</a></h2>
+<p>Gaussian Processes.</p>
+<p>A powerful and expressive approach to capture interactions between objects are Gaussian Processes.
+If you do not know what are Gaussian Processes yet, different contexts raise various interpretations</p>
+<ul>
+<li>For time series you can think "GP is a smooth interpolation of the time series".</li>
+<li>For spatial data, similar to time series, "GP is a smooth interpolation of the spatial data".</li>
+<li>For hierarchical modelling you can read GP as "differences between objects depend on attributes in some smooth way".</li>
+</ul>
+<p>The above interpretation is overly simplified, but relates us to the most valuable usage of GPs in the Bayesian modelling.
+Hierarchical models are not only models where objects are distinct, these models may appear in a structured way.</p>
+<h4 id="example_1">Example<a class="anchor-link" href="#example_1" title="Permanent link">&para;</a></h4>
+<p>The famous <a href="https://statmodeling.stat.columbia.edu/2014/01/21/everything-need-know-bayesian-statistics-learned-eight-schools/">example from Andrew Gelman</a> revisited with school coordinates.</p>
+<div class="image-comment">
+<div class="image">
+<image src="/images/schools_gp_posterior.png">
+</div>
+<div class="comment">
+<b>Spatial 8 schools</b>
+<p> Gaussian process interpolates between schools taking in account proximity.
+A prediction for a novel location is possible and will be the more confident the closer point is to available observations.
+</div>
+</div>
+
+<p>The above example shows how available information could be inserted into the simpler model.
+In practice, this addition comes with relatively little code changes and interpretable additional parameters.
+There is, probably, no easier model but Gaussian Process that can be both for the example:</p>
+<ol>
+<li>Expressive enough to capture the complicated nature of spatial proximity.</li>
+<li>Interpretable enough to understand every new parameter.</li>
+</ol>
+<p><b>More in the <a href="/latex/beamer/practical-bayes/lecture-4/lecture-4.pdf">Presentation</a></b></p>
+<h2 id="lecture-5">Lecture 5<a class="anchor-link" href="#lecture-5" title="Permanent link">&para;</a></h2>
+<p>Gaussian Processes for time series.</p>
+<div class="math">$$
+    x_t \sim \underbrace{g(t)}_{non-periodic} + \underbrace{s(t)}_{periodic} + \underbrace{h(t)}_{holidays}
+$$</div>
+<p>Time series models, when backed by Gaussian Processes, can be decomposed into trend, seasonality and residuals.
+Bayesian approach decomposes monolithic <a href="https://www.statsmodels.org/devel/examples/notebooks/generated/stl_decomposition.html">STL</a> model into building blocks making it possible to create hierarchical extensions to the traditional model.</p>
+<p><b>More in the <a href="/latex/beamer/practical-bayes/lecture-5/lecture-5.pdf">Presentation</a></b></p>
+<h2 id="lecture-6">Lecture 6<a class="anchor-link" href="#lecture-6" title="Permanent link">&para;</a></h2>
+<p>Customer Lifetime Model using PyMC.</p>
+<div class="math">$$
+\text{CLV} = \text{Number of Purchases} \times \text{Values of Purchases}
+$$</div>
+<p>CLV is a very popular marketing analysis metric which helps to forecast future revenue or compare effectiveness of marketing companies.
+Traditional, frequentist CLV is a point estimate without uncertainties in mind.
+Bayesian approach helps to link business knowledge about retention and purchase activity with model parameters.
+The frequentist counterpart would treat every customer separately, loosing essential bits ignoring similarities between them.
+Hierarchical approach provides additional insights about the distribution of population level activity levels and retention.</p>
+<blockquote>
+<p>Most of the material is taken from <a href="https://medium.com/@meraldo.antonio">Antonio Meraldo's blog</a></p>
+<ul>
+<li><a href="https://towardsdatascience.com/customer-lifetime-value-estimation-via-probabilistic-modeling-d5111cb52dd">Part 1</a></li>
+<li><a href="https://towardsdatascience.com/bayesian-customer-lifetime-values-modeling-using-pymc3-d770676f5c06">Part 2</a></li>
+</ul>
+</blockquote>
+<p><b>More in the <a href="/latex/beamer/practical-bayes/lecture-6/lecture-6.pdf">Presentation</a></b></p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js','color.js','mhchem.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+    </article>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                            <li>
+                                <a href="https://t.me/ferres">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-telegram fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://twitter.com/ferrine96">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ferrine">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/ferrine/">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="mailto:max.kochurov@pymc-labs.io">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                    </ul>
+<p class="copyright text-muted">
+    Blog powered by <a href="http://getpelican.com">Pelican</a>,
+    which takes great advantage of <a href="http://python.org">Python</a>. <br />        &copy;  Maxim Kochurov
+</p>                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="https://ferrine.github.io/theme/js/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="https://ferrine.github.io/theme/js/bootstrap.min.js"></script>
+
+        <!-- Custom Theme JavaScript -->
+        <script src="https://ferrine.github.io/theme/js/clean-blog.min.js"></script>
+
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-98661135-1', 'auto');
+    ga('send', 'pageview');
+</script>
+<script type="text/javascript">
+    var disqus_shortname = 'ferrine-github-io';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+
+</html>
