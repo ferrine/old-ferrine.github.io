@@ -10,7 +10,7 @@ Here I'll keep a backlog of my ideas that can be phrased in a short catchy summa
 
 - [ ] How do I construct priors for X?
     - [ ] X = AB testing
-    - [ ] X = Linear regression
+    - [x] X = Linear regression
 - [ ] biotech projects
     - [ ] TBA
 - [ ] Programming
