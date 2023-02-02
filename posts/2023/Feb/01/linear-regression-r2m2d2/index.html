@@ -126,15 +126,15 @@
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>There is an awesome paper that puts a simple idea of interpretable linear regression to an absolute.
 The <a href="https://arxiv.org/abs/2208.07132">Intuitive Joint Priors for Bayesian Linear Multilevel Models: The R2D2M2 prior</a>.
-The idea resonates with me a lot since I admire interpretable priors and tha ability to describe the model, not an ability to explain.</p>
+The idea resonates with me a lot since I admire interpretable priors and the ability to describe the model, not an ability to explain.</p>
 <p>Explaining the model, you try to interpret parameters that are already present in the model and you need to put some human readable explanation of the meaning.
-It resembles me the top down approach, then you introduce parameters as you need them.</p>
+It reminds me of the top down approach, then you introduce parameters as you need them.</p>
 <p>Describing the model is the opposite. 
-You start with simple statements that you or your peer both understand to argue about.
-It is usually referred as the bottom up approach, you start with assumpltions you understand and complete the model as you go.</p>
-<p>Mastering the latter is the essense of the Bayesian modelling.
-In this sense, the paper is of a great interest to me.</p>
-<h2 id="Boston-Housing-Data">Boston Housing Data<a class="anchor-link" href="#Boston-Housing-Data">&#182;</a></h2><p>As a benchmark dataset I took boston housing dataset.
+You start with simple statements that you or your peers both understand to argue about.
+It is usually referred to as the bottom up approach, you start with assumptions you understand and complete the model as you go.</p>
+<p>Mastering the latter is the essence of Bayesian modeling.
+In this sense, the paper is of great interest to me.</p>
+<h2 id="Boston-Housing-Data">Boston Housing Data<a class="anchor-link" href="#Boston-Housing-Data">&#182;</a></h2><p>As a benchmark dataset I took the Boston housing dataset.
 It has the bare minimum to check the model parametrization.
 I took the part of the linear regression I really need and ignored varying intercept and varying slope.
 Here is the full model I'm referring to.</p>
@@ -188,10 +188,10 @@ $$
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>It has to be remarked, that I advocate to normalize your input data so it has $\mathbb{E}[X]=0$, $\mathbb{V}[X]=1$.
+<p>It has to be remarked that I advocate normalizing your input data so it has $\mathbb{E}[X]=0$, $\mathbb{V}[X]=1$.
 This will save you a lot of time to figure out the right scale for slope parameters.
 Normalizing the output variable also makes a lot of sense.
-You may also notice that it is actually a part of the R2D2M2 linear regression parametrizarion.
+You may also notice that it is actually a part of the R2D2M2 linear regression parameterization.
 A rule of thumb is to take care of it one way or another.</p>
 
 </div>
@@ -201,7 +201,7 @@ A rule of thumb is to take care of it one way or another.</p>
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 $$
-b_i \sim \mathcal{N} \left(0, \color{red}{\frac{\sigma^2}{\sigma_{x_i}^2}}\right)
+b_i \sim \mathcal{N} \left(0, \frac{\sigma^2}{\sigma_{x_i}^2}\right)
 $$
 </div>
 </div>
@@ -251,7 +251,7 @@ $$
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Non-centered-R2D2M2">Non-centered R2D2M2<a class="anchor-link" href="#Non-centered-R2D2M2">&#182;</a></h3><p>Whenever I see a normal distribution with mean and scale I tend to use non-cented parametrization.
+<h3 id="Non-centered-R2D2M2">Non-centered R2D2M2<a class="anchor-link" href="#Non-centered-R2D2M2">&#182;</a></h3><p>Whenever I see a normal distribution with mean and scale I tend to use non-centered parameterization.
 I was shocked to see how different it is from the centered case.
 But before we go to the working examples, let's see how to make an amazing model miserably fail.</p>
 
@@ -260,11 +260,11 @@ But before we go to the working examples, let's see how to make an amazing model
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[89]:</div>
+<div class="prompt input_prompt">In&nbsp;[139]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># grade the importance of variables</span>
-<span class="c1"># 0 - least impotant, inf - most important</span>
+<span class="c1"># 0 - least important, inf - most important</span>
 <span class="c1"># 1 - &quot;I do not know&quot;</span>
 <span class="n">alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 <span class="c1"># Give me the 95% bounds of possible R2 for this linear regression</span>
@@ -19477,8 +19477,8 @@ L 1193.51952 760.09577
 <ul>
 <li>Larger phi discourages large coefficients.</li>
 <li>There is also a banana shape relationship</li>
-<li>Step size should be very different if you are in the center of banana or on it's boundary.</li>
-<li>Total sampling time on my M1 Mac book Air is almost 40 mins 🤯</li>
+<li>Step size should be very different if you are in the center of the banana or on its boundary.</li>
+<li>Total sampling time on my M1 Macbook Air is almost 40 mins 🤯</li>
 </ul>
 
 </div>
@@ -19487,12 +19487,12 @@ L 1193.51952 760.09577
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Centered-R2D2M2">Centered R2D2M2<a class="anchor-link" href="#Centered-R2D2M2">&#182;</a></h3><p>To my surprize, this model parametrization is 20 times faster than a non-centered variant.
-Once you download the notebook, you can play around with some of the parameters below to get the idea of R2D2M2 strong or week places.
+<h3 id="Centered-R2D2M2">Centered R2D2M2<a class="anchor-link" href="#Centered-R2D2M2">&#182;</a></h3><p>To my surprise, this model parametrization is 20 times faster than a non-centered variant.
+Once you download the notebook, you can play around with some of the parameters below to get the idea of R2D2M2 strong or weak places.
 Here is the bare minimum of what you should know about the model:</p>
 <ul>
 <li>You choose R2:<ul>
-<li>On econometrics classes you've seen what is R2. </li>
+<li>In econometrics classes you've seen what is R2. </li>
 <li>1 - is a perfect data fit</li>
 <li>0 - total noise and predictors are irrelevant.</li>
 <li>In a Bayesian setup, you do not pick one, you pick possible ones.</li>
@@ -19500,7 +19500,7 @@ Here is the bare minimum of what you should know about the model:</p>
 </ul>
 </li>
 <li>You choose variable importance:<ul>
-<li>There usually many variables in the regression, one you might assume is more important than another.</li>
+<li>There are usually many variables in the regression, one you might assume is more important than another.</li>
 <li>$\alpha_i$ is the parameter to look into to express the knowledge.</li>
 <li>$\alpha_i=1$ is total unawareness of the importance of the variable.</li>
 <li>$\alpha_i&lt;1$ tells the model you tend to think the $i$'th variable is likely to be not important.</li>
@@ -40352,8 +40352,8 @@ z
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Prior-density">Prior density<a class="anchor-link" href="#Prior-density">&#182;</a></h2><p>Tweaking the parameters, you can see how does alpha affect the shape of the prior for the coefficients. 
-The R2D2M2 prior distribution has astonishing.
+<h2 id="Prior-density">Prior density<a class="anchor-link" href="#Prior-density">&#182;</a></h2><p>Tweaking the parameters, you can see how alpha affects the shape of the prior for the coefficients. 
+The R2D2M2 prior distribution was astonishing.
 I compare the tails to Cauchy, for example.</p>
 
 </div>
